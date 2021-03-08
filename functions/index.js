@@ -24,7 +24,7 @@ exports.welcomeMail = functions.auth.user().onCreate((user) => {
       const user = doc.data();
       const mail = {
         to: user.email,
-        from: 'billy@damnitrahul.com',
+        from: 'ujjawalanand1729@gmail.com',
         templateId: 'd-bebf957a522e45898bccc82e3bd1b125',
         dynamic_template_data: {
           name: user.firstName
@@ -45,7 +45,7 @@ exports.invoiceGenerateMail = functions.firestore
     const invoice = doc.data();
     const mail = {
       to: invoice.email,
-      from: 'billy@damnitrahul.com',
+      from: 'ujjawalanand1729@gmail.com',
       templateId: 'd-7b2a7a4c41604eeda7aa0d7ec57b056c',
       dynamic_template_data: {
         subject: `Invoice Received from ${invoice.companyName}`,
@@ -79,7 +79,7 @@ exports.invoiceRemindMail = functions.https.onCall(async (data, context) => {
       const invoice = data.data();
       const mail = {
         to: invoice.email,
-        from: 'billy@damnitrahul.com',
+        from: 'ujjawalanand1729@gmail.com',
         templateId: 'd-7b2a7a4c41604eeda7aa0d7ec57b056c',
         dynamic_template_data: {
           subject: `Payment Reminder from ${invoice.companyName}`,
