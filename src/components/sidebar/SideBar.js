@@ -17,25 +17,31 @@ function SideBar() {
         icon={'tio-dashboard_vs'}
         name={'Dashboard'}
         color={'#2E5BFF'}
-        to="/"
+        routeTo="/"
       />
       <NavLinks
         icon={'tio-add_circle'}
         name={'Create New'}
         color={'#6772E5'}
-        to="/create"
+        routeTo="/create"
+      />
+      <NavLinks
+        icon={'hopping-cart-add'}
+        name={'Items'}
+        color={'#6772E5'}
+        routeTo="/items"
       />
       <NavLinks
         icon={'tio-receipt'}
         name={'Invoices'}
         color={'#FD5665'}
-        to="/invoices"
+        routeTo="/invoices"
       />
       <NavLinks
         icon={' tio-settings_vs'}
         name={'Settings'}
         color={'#FDA734'}
-        to="/settings"
+        routeTo="/settings"
       />
     </SidePanel>
   );

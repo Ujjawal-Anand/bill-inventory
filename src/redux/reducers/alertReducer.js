@@ -1,4 +1,4 @@
-const initState = { alert: false };
+const initState = { alert: false, open: false };
 
 const alertReducer = (state = initState, action) => {
   switch (action.type) {
@@ -20,6 +20,11 @@ const alertReducer = (state = initState, action) => {
         yesBtn: 'Delete Invoice',
         noBtn: 'Cancel',
         alertFn: action.payload
+      };
+
+    case 'ADD_ITEM_CNF':
+      return {
+        open: action.payload
       };
 
     case 'PAYCHANGE_CNF':

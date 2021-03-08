@@ -32,8 +32,8 @@ function Invoices() {
     ));
   }
   if (!isLoaded(invoices)) {
-    tableListItems = Array.from({ length: 10 }).map((invoice) => (
-      <InvoiceListLoader />
+    tableListItems = Array.from({ length: 10 }).map((invoice, index) => (
+      <InvoiceListLoader key={index} />
     ));
   }
   return (

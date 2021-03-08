@@ -7,6 +7,7 @@ import invoiceReducer from './invoiceReducer';
 import loadingStateReducer from './loadingStateReducer';
 import alertReducer from './alertReducer';
 import snackbarReducer from './snackbarReducer';
+import itemReducer from './itemReducers';
 
 const rootReducer = combineReducers({
   firebase: firebaseReducer,
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
   invoice: invoiceReducer,
   loadingState: loadingStateReducer,
   alertState: alertReducer,
-  snackbar: snackbarReducer
+  snackbar: snackbarReducer,
+  item: itemReducer
 });
 
 export default rootReducer;

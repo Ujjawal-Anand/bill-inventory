@@ -4,9 +4,9 @@ import { SideNavLink } from '../styledComponents/layout/sidebar/SideNavLink';
 
 // Component
 function NavLinks(props) {
-  const { icon, name, color, to } = props;
+  const { icon, name, color, routeTo } = props;
   return (
-    <SideNavLink exact to="/" color={color} to={to}>
+    <SideNavLink exact  color={color} to={routeTo}>
       <span>
         <i className={icon}></i>
       </span>{' '}

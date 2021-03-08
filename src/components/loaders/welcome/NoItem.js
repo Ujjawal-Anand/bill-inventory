@@ -2,7 +2,7 @@ import React from 'react';
 //Vendor
 import styled from 'styled-components';
 // Custom
-import nothing from '../../../images/nothing.svg';
+import noitem from '../../../images/noItem.svg';
 import { Link } from 'react-router-dom';
 
 // Styled
@@ -28,16 +28,16 @@ const Loader = styled.div`
 `;
 
 // Component
-const NothingHere = ({ routeTo = "/create", altText= "Nothing Here Yet"}) => {
-  return (
-    <Loader>
-      <div>
-        <Link to={routeTo}>
-          <img src={nothing} alt={altText} />
-        </Link>
-      </div>
-    </Loader>
-  );
+const NoItem = () => {
+    return (
+        <Loader>
+            <div>
+                <Link to='item/create'>
+                    <img src={noitem} alt="No item found, add some!" />
+                </Link>
+            </div>
+        </Loader>
+    );
 }
 
-export default NothingHere;
+export default NoItem;

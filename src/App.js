@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Loadable from 'react-loadable';
 // Vendor
 import { Redirect, Switch, Route } from 'react-router-dom';
@@ -25,28 +25,6 @@ const LazyApp = Loadable({
 function App() {
   const auth = useSelector((state) => state.firebase.auth);
 
-  useEffect(() => {
-    console.log(
-      '%c👋 Oh, Hi there,Curious web lover!',
-      'color: #d74034; font-size:24px;'
-    );
-    console.log(
-      `%c ✨ Like what you see? We could work together!
-      
-    🐛 Found a bug? Please, let me know by e-mail, twitter, github issue...
-    
-    🛠 Code available here: https://github.com/damnitrahul/billy
-      
-    📬 Find me here: https://twitter.com/damnitrahul
-      
-    Let the debug begin!
-    
-    Bonus meme: https://i.redd.it/xz60l1c7pxt41.jpg
-    `,
-      'font-size:16px'
-    );
-  }, []);
-
   useFirestoreConnect([
     {
       collection: 'users',
@@ -55,6 +33,14 @@ function App() {
         { collection: 'invoices', orderBy: ['invoiceDate', 'desc'] }
       ],
       storeAs: 'invoices'
+    },
+    {
+      collection: 'users',
+      doc: auth.uid || ' ',
+      subcollections: [
+        { collection: 'items', orderBy: ['createdAt', 'desc'] }
+      ],
+      storeAs: 'items'
     }
   ]);
 

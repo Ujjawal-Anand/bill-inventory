@@ -43,7 +43,7 @@ function AlertSnackbar() {
               color="inherit"
               onClick={handleClose}
             >
-              <CloseIcon fontSize="medium" />
+              <CloseIcon fontSize="large" />
             </IconButton>
           </>
         }

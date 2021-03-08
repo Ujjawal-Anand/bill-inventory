@@ -16,6 +16,7 @@ function SignUp() {
     return () => {
       dispatch({ type: 'RESET_AUTH_ERROR' });
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <SignUpPage>

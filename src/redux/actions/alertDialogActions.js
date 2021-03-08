@@ -22,3 +22,7 @@ export const closeDialog = (dispatch) => ({
   type: 'CLOSE_DIALOG',
   payload: dispatch
 });
+export const openAddItemDialog = (dispatch) => ({
+  type: 'ADD_ITEM_CNF',
+  payload: dispatch
+})

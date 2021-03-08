@@ -64,6 +64,7 @@ function NewInvoice(props) {
         companyName: settings.companyName,
         gstNumber: settings.gstNumber
       });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings]);
 
   //Loader For Create Full Page

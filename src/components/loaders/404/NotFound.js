@@ -29,7 +29,7 @@ function NotFound() {
     <Loader>
       <div>
         <img src={NotFoundImg} alt="Not Found" />
-        <SecondaryButton as={Link} to="/" secondary>
+        <SecondaryButton as={Link} to="/" secondary="true">
           Return Home
         </SecondaryButton>
       </div>

@@ -3,7 +3,7 @@ import React from 'react';
 import moment from 'moment';
 import numWords from 'num-words';
 import styled from '@react-pdf/styled-components';
-import { Page, Text, View, Document, Font } from '@react-pdf/renderer';
+import { Document, Font } from '@react-pdf/renderer';
 import Noto from '../../../fonts/Yantramanav/Yantramanav-Regular.ttf';
 
 Font.register({
@@ -107,9 +107,8 @@ function InvoicePDF(props) {
     dueDate,
     mobileNumber,
     invoiceNumber,
-    billableType,
     currency,
-    note="Thank you for shopping!",
+    note = "Thank you for shopping!",
     taxEnable,
     taxType,
     taxPercent,
@@ -175,7 +174,7 @@ function InvoicePDF(props) {
           <BillColumnLeft>
             <Details style={{ marginTop: '40px', textTransform: 'capitalize' }}>Total Amount in words: {numWords(totalAmount)}</Details>
 
-            {note.length> 0 && (
+            {note.length > 0 && (
               <Details style={{ marginTop: '20px' }}>Note : {note}</Details>
             )}
             <Details>सभी विवाद केवल पटना के अधिकार क्षेत्र के अधीन हैं </Details>
@@ -248,12 +247,12 @@ function InvoicePDF(props) {
                     })}
 
                   </Details>
-                  
+
                 )}
                 <Details style={{ marginTop: '50px' }}>Signature</Details>
 
               </BillTotal>
-              
+
 
             </BillDetails>
           </BillColumnRight>
