@@ -78,7 +78,7 @@ const BillRowHead = styled(BillRow)`
   color: white;
 `;
 const BillDataText = styled.Text`
-  width: 50%;
+  width: 80%;
   padding: 0 5px;
   font-size: 12px;
 `;
@@ -122,7 +122,7 @@ function InvoicePDF(props) {
   const itemList = items.map(({ itemName, rate, qty, amount, id }, i) => (
     <BillRow key={id}>
       <BillDataSerial>{i + 1}</BillDataSerial>
-      <BillDataText>{itemName}</BillDataText>
+      <BillDataText>{itemName} .</BillDataText>
       <BillDataNum>{rate.toFixed(2)}</BillDataNum>
       <BillDataNum style={{ width: '6%' }}>{qty}</BillDataNum>
       <BillDataNum></BillDataNum>
@@ -153,7 +153,7 @@ function InvoicePDF(props) {
             <Details style={{ marginTop: '20px' }}>Bill To</Details>
             <Textt>{customerName}</Textt>
             <Details>{customerAddress}</Details>
-            {mobileNumber && <Details>Mo: - {mobileNumber}</Details>}
+            <Details>{mobileNumber}</Details>
             <Details>{email}</Details>
           </BillColumnRight>
         </BillDetails>
@@ -177,7 +177,7 @@ function InvoicePDF(props) {
             {note.length > 0 && (
               <Details style={{ marginTop: '20px' }}>Note : {note}</Details>
             )}
-            <Details>सभी विवाद केवल पटना के अधिकार क्षेत्र के अधीन हैं </Details>
+            <Details>सभी विवाद केवल पटना के अधिकार क्षेत्र के अधीन हैं है  </Details>
           </BillColumnLeft>
           <BillColumnRight>
             <BillDetails>

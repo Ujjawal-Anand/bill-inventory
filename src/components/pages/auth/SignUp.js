@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux';
 import SignUpForm from './SignUpForm';
 import { SignUpPage } from '../../styledComponents/auth/SignupLoginForm';
 import BillyLogo from '../../../images/Billy-Logo.png';
-import DamnitrahulLogo from '../../../images/logo.png';
 
 // Component
 function SignUp() {
@@ -35,11 +34,11 @@ function SignUp() {
               <p>created by</p>
               <div className="brand-image">
                 <a
-                  href="https://damnitrahul.com/"
+                  href="https://www.easydukan.online"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <img src={DamnitrahulLogo} alt="BillyLogo" />
+                  Ujjawal Anand
                 </a>
               </div>
             </div>

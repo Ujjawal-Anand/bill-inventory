@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Grid from '@material-ui/core/Grid';
 import { useForm } from 'react-hook-form';
+
 // Custom
 import { Button } from '../../styledComponents/shared/Button';
 import useToggle from '../../../hooks/useToggle';
@@ -61,7 +62,7 @@ function ProductListItem(props) {
           error={errors.itemName && true}
           helperText={errors.itemName && 'Invalid Input'}
           inputRef={register({ required: true, minLength: 2 })}
-          disabled={!isEditing}
+          disabled
         />
       </Grid>
       <Grid item xs={6} md={2} lg={2}>

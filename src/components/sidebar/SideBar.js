@@ -26,9 +26,9 @@ function SideBar() {
         routeTo="/create"
       />
       <NavLinks
-        icon={'hopping-cart-add'}
+        icon={'tio-add_circle'}
         name={'Items'}
-        color={'#6772E5'}
+        color={'#FDA734'}
         routeTo="/items"
       />
       <NavLinks

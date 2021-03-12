@@ -1,5 +1,5 @@
 import history from '../../others/history';
-import {index} from '../../others/algoliaClient';
+import { index } from '../../others/algoliaClient';
 
 /* ******************* Create Item ******************* */
 
@@ -12,9 +12,6 @@ export const createItem = (itemDetails) => (
     const uid = getState().firebase.auth.uid;
     const currItem = getState().firebase.profile.currentItem;
     const firestore = getFirebase().firestore();
-
-    
-    // eslint-disable-next-line no-unused-vars
     let path = '';
     firestore
         .collection('users')
@@ -31,16 +28,16 @@ export const createItem = (itemDetails) => (
         .then((res) => {
             dispatch({ type: 'CREATE_ITEM', payload: itemDetails });
             // save item to algolia index
-            index
-                .saveObject({objectID: uid, 
-                            itemName: itemDetails.itemName, 
-                            displayName: itemDetails.displayName,
-                            sellingPrice: itemDetails.sellingPrice
-                        }, { autoGenerateObjectIDIfNotExist: true })
+            index.saveObject({
+                objectID: path,
+                itemName: itemDetails.itemName,
+                displayName: itemDetails.displayName,
+                sellingPrice: itemDetails.sellingPrice
+            }, { autoGenerateObjectIDIfNotExist: true })
                 .then(({ objectID }) => {
                     console.log(objectID);
                 });
-            history.push(`/items`);
+            // history.push(`/items`);
         })
         .catch((err) => {
             dispatch({ type: 'CREATE_ITEM_ERROR', err });

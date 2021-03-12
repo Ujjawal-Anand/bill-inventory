@@ -74,11 +74,11 @@ function LoginForm() {
       <p className="footer-by ">
         Created By{' '}
         <a
-          href="https://damnitrahul.com/"
+          href="https://www.easydukan.online"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Rahul Raj
+         Ujjawal Anand
         </a>
       </p>
     </LoginBox>

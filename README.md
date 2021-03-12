@@ -16,4 +16,3 @@ A Serverless JAM Stack Invoicing Application made with React.js, Redux, and Fire
 - Save company details to autofill fields by default
 - Invoice Number cannot be tampered with and changed
 
-Find the project live [here](https://billy.damnitrahul.com/)

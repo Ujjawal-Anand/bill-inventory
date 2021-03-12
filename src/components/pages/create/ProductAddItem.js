@@ -1,32 +1,57 @@
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useEffect } from 'react';
 //Vendor
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { InstantSearch } from 'react-instantsearch-dom';
 import Grid from '@material-ui/core/Grid';
 import { useForm } from 'react-hook-form';
 import nanoid from 'nanoid';
 // Custom
 import { Button } from '../../styledComponents/shared/Button';
+import searchClient from '../../../others/algoliaSearchClient'
+import CustomAutocomplete from './AutocompleteField';
+import { useSelector } from 'react-redux';
+
+
 
 //Component
 function ProductAddItem(props) {
   const { register, handleSubmit, errors } = useForm();
-  const [form, setForm] = useState({ itemName: '', rate: '',  qty: 1 });
+  const [form, setForm] = useState({ itemName: '', rate: '', qty: 1 });
+  const item = useSelector(
+    (state) => state.invoiceItem
+  );
+  console.log(item);
   const updateFrom = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value, rate: item.sellingPrice });
   };
+
+  useEffect(() => {
+    setForm({
+      ...form,
+      rate: item.sellingPrice,
+      itemName: item.itemName,
+      displayName: item.displayName,
+      id: item.id
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [item]
+  )
 
   const currency = props.currency === 'usd' ? '$' : '₹';
 
   const onSubmit = (data) => {
     data = { id: nanoid(4), ...data };
-    props.handleAdd(data);
+    props.handleAdd({ ...data, itemName: item.displayName });
   };
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={4} lg={4}>
-        <TextField
+        <InstantSearch indexName="ITEM_LIST" searchClient={searchClient()}>
+          <CustomAutocomplete />
+        </InstantSearch>
+        {/* <TextField
           size="small"
           fullWidth
           label="Item Name"
@@ -38,7 +63,7 @@ function ProductAddItem(props) {
           inputRef={register({ required: true, minLength: 2 })}
           error={errors.itemName && true}
           helperText={errors.itemName && 'Invalid Input'}
-        />
+        /> */}
       </Grid>
       <Grid item xs={8} md={2} lg={2}>
         <TextField
@@ -110,7 +135,7 @@ function ProductAddItem(props) {
           margin="dense"
           label="Amount"
           name="amount"
-          value={(form.rate * form.qty ).toFixed(2)}
+          value={(form.rate * form.qty).toFixed(2)}
           inputRef={register({ required: true, min: 0 })}
           error={errors.amount && true}
           helperText={errors.amount && 'Something Wrong'}
