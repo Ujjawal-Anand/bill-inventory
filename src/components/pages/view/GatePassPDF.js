@@ -11,7 +11,7 @@ Font.register({
 });
 
 const BillPage = styled.Page`
-  padding: 80px 40px;
+  padding: 10px 30px;
   font-family: 'Noto Sans';
 `;
 
@@ -86,17 +86,24 @@ const BillDataSerial = styled(BillDataNum)`
 function GatePassPDF(props) {
   const {
     companyName = "Pooja Store",
+    companyAddress = '',
     warehouseName = "1",
     warehouseAddress = "Patna City",
+    deliveryDate = new Date(),
     items
   } = props.invoice;
-  const itemList = items.map(({ itemName, qty }, i) => (
-    <BillRow key={i}>
-      <BillDataSerial>{i + 1}</BillDataSerial>
-      <BillDataText>{itemName} .</BillDataText>
-      <BillDataNum style={{ width: '6%' }}>{qty}</BillDataNum>
-    </BillRow>
-  ));
+  console.log("items", items)
+  // eslint-disable-next-line array-callback-return
+  const itemList = items.map(({ itemName, qty }, i) => {
+    if (itemName)
+      return (
+        <BillRow key={i}>
+          <BillDataSerial>{i + 1}</BillDataSerial>
+          <BillDataText>{itemName} .</BillDataText>
+          <BillDataNum>{qty}</BillDataNum>
+        </BillRow>
+      )
+  });
 
   return (
     <Document>
@@ -104,21 +111,23 @@ function GatePassPDF(props) {
         <BillDetails>
           <BillColumnLeft>
             <Textt>{companyName}</Textt>
-            <Details>Warehouse - {warehouseName}</Details>
-            <Details>Address - {warehouseAddress}</Details>
-            <Details style={{ marginTop: '40px' }}>
+            <Details>{companyAddress}</Details>
+            <Details style={{ marginTop: '10px' }}>
               GatePass Date : {new Date().toLocaleDateString()}
             </Details>
+            <Details>Delivery Date : {new Date(deliveryDate).toLocaleDateString()} </Details>
           </BillColumnLeft>
           <BillColumnRight>
             <GatePassHeading>GatePass</GatePassHeading>
+            <Details>Warehouse - {warehouseName}</Details>
+            <Details>Address - {warehouseAddress}</Details>
           </BillColumnRight>
         </BillDetails>
         <BillTable>
           <BillRowHead>
-            <BillDataSerial>#</BillDataSerial>
+            <BillDataSerial>Sr.</BillDataSerial>
             <BillDataText>Item Name</BillDataText>
-            <BillDataNum style={{ width: '6%' }}>Qty</BillDataNum>
+            <BillDataNum>Quantity</BillDataNum>
           </BillRowHead>
         </BillTable>
         {itemList}

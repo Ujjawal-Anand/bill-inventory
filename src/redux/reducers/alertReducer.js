@@ -1,4 +1,10 @@
-const initState = { alert: false, open: false, openCreateGatepass: false };
+const initState = {
+  alert: false,
+  open: false,
+  openCreateGatepass: false,
+  openUpdateStock: false,
+  item: {}
+};
 
 const alertReducer = (state = initState, action) => {
   switch (action.type) {
@@ -28,6 +34,11 @@ const alertReducer = (state = initState, action) => {
         item: action.payload.item
       };
 
+    case 'UPDATE_STOCK_DIALOG':
+      return {
+        openUpdateStock: action.payload.openUpdateStock,
+        item: action.payload.item
+      }
     case 'PAYCHANGE_CNF':
       return {
         alert: true,

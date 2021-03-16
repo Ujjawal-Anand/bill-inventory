@@ -1,5 +1,4 @@
 import history from '../../others/history';
-import { index } from '../../others/algoliaClient';
 import db from '../../db';
 
 
@@ -107,7 +106,7 @@ export const editItem = (itemId, newItemDetails) => (
         .doc(itemId)
         .update({ ...newItemDetails })
         .then(() => {
-            index.partialUpdateObject({ objectID: itemId, ...newItemDetails })
+            // index.partialUpdateObject({ objectID: itemId, ...newItemDetails })
             dispatch({ type: 'CREATE_ITEM', payload: newItemDetails });
 
         })

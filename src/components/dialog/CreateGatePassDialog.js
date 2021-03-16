@@ -7,26 +7,36 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm, Controller } from 'react-hook-form';
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 import { isLoaded } from 'react-redux-firebase';
 import InputLabel from '@material-ui/core/InputLabel';
 import Grid from '@material-ui/core/Grid';
-import { openCreateGatePassDialog } from '../../redux/actions/alertDialogActions';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import GatePassPDF from '../pages/view/GatePassPDF';
 import { pdf } from '@react-pdf/renderer';
+import {
+    MuiPickersUtilsProvider,
+    KeyboardDatePicker
+} from '@material-ui/pickers';
+import MomentUtils from '@date-io/moment';
+
+
+import GatePassPDF from '../pages/view/GatePassPDF';
+import { openCreateGatePassDialog } from '../../redux/actions/alertDialogActions';
 
 
 
 
-export default function CreateGatePassDialog({ items }) {
-    const { register, handleSubmit, errors, control } = useForm();
-    const [state, setState] = React.useState({});
-    const [warehouseName, setWarehouseName] = React.useState();
+
+export default function CreateGatePassDialog({ invoice }) {
+    const items = invoice.items;
+    let defaultValues = { warehouseName: "", deliveryDate: new Date() }
+    items.map(item => {
+        return defaultValues[`items[${item.id}].qty`] = item.qty
+    })
+    console.log(defaultValues)
+
+    const { handleSubmit, errors, control } = useForm({ defaultValues });
     const warehouse = useSelector((state) => state.firestore.ordered.warehouse);
 
 
@@ -37,27 +47,26 @@ export default function CreateGatePassDialog({ items }) {
 
     const handleClose = () => {
         dispatch(openCreateGatePassDialog(false));
-        setWarehouseName('');
     };
-
-    const handleChange = (event) => {
-        setState({ ...state, [event.target.name]: event.target.checked });
-    };
-
 
     const onSubmit = (data) => {
         // 
         let checkedItems = [];
         console.log("data", data)
 
-        for (let [key, value] of Object.entries(data)) {
-            if (state[key]) {
-                checkedItems = [...checkedItems, { itemName: key, qty: value }]
+        for (let [key, value] of Object.entries(data.items)) {
+            if (value.itemName) {
+                checkedItems = [...checkedItems, { ...value, id: key }]
             }
         }
-        console.log(checkedItems);
         if (checkedItems.length > 0) {
-            generatePdfDocument({ warehouseName, items: checkedItems });
+            generatePdfDocument({
+                companyName: invoice.companyName,
+                companyAddress: invoice.companyAddress,
+                warehouseName: data.warehouseName,
+                deliveryDate: typeof (data.deliveryDate) === "object" ? data.deliveryDate._d : data.deliveryDate,
+                items: checkedItems
+            });
             handleClose();
         }
     };
@@ -74,85 +83,114 @@ export default function CreateGatePassDialog({ items }) {
     return (
         <div>
             <Dialog open={openCreateGatepass} onClose={handleClose}
-                fullWidth={true} maxWidth="sm"
+                fullWidth={true} maxWidth="sm" scroll="paper"
                 aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Create Gate Pass</DialogTitle>
-                <DialogContent>
-                    <form onSubmit={handleSubmit(data => console.log(data))}>
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <InputLabel id="select-warehouse-label">Select Warehouse</InputLabel>
-                                <Select
-                                    labelId="select-warehouse-label"
-                                    id="select-warehouse"
-                                    name="selectWarehouse"
-                                    value={warehouseName}
-                                    fullWidth
-                                    inputRef={register({ required: true })}
-                                    required
-                                    onChange={(e) => setWarehouseName(e.target.value)}
-                                >
-                                    {isLoaded(warehouse) &&
-                                        warehouse.map((item, index) => <MenuItem key={index} value={item.name}>{item.name}</MenuItem>)}
 
-                                </Select>
-                            </Grid>
-                            {items.map(item => (
-                                <div key={item.id}>
+                <DialogContent dividers={true}>
+                    <Grid container spacing={3}>
+                        <Grid item xs={6}>
+                            <InputLabel htmlFor="select-warehouse-label">Select Warehouse</InputLabel>
+                            <Controller
+                                as={
+                                    <Select
+                                        label="Select Warehouse"
+                                        margin="dense"
+                                        variant="outlined"
+                                        error={errors.warehouseName && true}
+                                        fullWidth
+                                        inputProps={{
+                                            name: 'warehouseName',
+                                            id: 'select-warehouse-label',
+                                        }}
+                                    >
+                                        <option aria-label="None" value="" />
+                                        {isLoaded(warehouse) &&
+                                            warehouse.map((item, index) => <option key={index} value={item.name}>{item.name}</option>)}
+                                    </Select>
+                                }
+                                name="warehouseName"
+                                rules={{ required: true }}
+                                control={control}
+                            />
+                        </Grid>
+                        <Grid item xs={6}>
+                            <MuiPickersUtilsProvider utils={MomentUtils}>
+                                <Controller
+                                    name="deliveryDate"
+                                    control={control}
+
+                                    // rules={{ required: true }}
+                                    render={({ ref, ...rest }) => (
+                                        <KeyboardDatePicker
+                                            id="date-picker-dialog"
+                                            label="Select Delivery Date"
+                                            format="DD/MM/yyyy"
+                                            fullWidth
+                                            margin="dense"
+                                            inputVariant="outlined"
+                                            KeyboardButtonProps={{
+                                                "aria-label": "change date"
+                                            }}
+                                            {...rest}
+                                        />
+                                    )}
+                                />
+                            </MuiPickersUtilsProvider>
+
+                        </Grid>
+                        {items.map(item => {
+                            const fieldName = `items[${item.id}]`
+                            return (
+                                <React.Fragment key={fieldName}>
                                     <Grid item xs={6}>
-                                        <label>{item.itemName}</label>
                                         <Controller
-                                            name={item.itemName}
+                                            name={`${fieldName}.itemName`}
                                             control={control}
                                             render={(props) => (
                                                 <Checkbox
-                                                    onChange={(e) => props.onChange(e.target.checked)}
+                                                    onChange={(e) => props.onChange(e.target.checked ? item.itemName : false)}
                                                     checked={props.value}
                                                     inputRef={props.ref}
                                                 />
                                             )}
                                         />
-                                        {/* <FormControlLabel
-                                            control={<Checkbox name={item.itemName}
-                                                onChange={(event) => handleChange(event)} />}
-                                            label={item.itemName}
-                                        /> */}
+                                        <label>{item.itemName}</label>
                                     </Grid>
-
                                     <Grid item xs={6}>
-                                        <TextField
-                                            label="Quantity from warehouse"
-                                            name={item.itemName}
-                                            inputRef={register({ required: false, minLength: 1 })}
-                                            error={errors.qty && true}
-                                            helperText={errors.qty && 'Invalid Input'}
-                                            size="small"
-                                            fullWidth
-                                            variant="outlined"
-                                            margin="dense"
-                                            defaultValue={item.qty}
-                                            required
-                                            disabled={!state[item.itemName]}
-                                            InputProps={{
-                                                startAdornment: (
-                                                    <InputAdornment position="start">
-                                                        Ordered Quantity:
-                                                    </InputAdornment>
-                                                )
-                                            }}
-                                        />
+                                        <Controller as={
+                                            <TextField
+                                                label="Quantity from warehouse"
+                                                size="small"
+                                                fullWidth
+                                                variant="outlined"
+                                                margin="dense"
+                                                defaultValue={item.qty}
+                                                required
+                                                InputProps={{
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            Ordered Quantity:
+                                                        </InputAdornment>
+                                                    )
+                                                }}
+                                            />
+                                        }
+                                            name={`${fieldName}.qty`} control={control} />
+
                                     </Grid>
-                                </div>
-                            ))}
-                        </Grid>
-                        <input type="submit" />
-                    </form>
+                                </React.Fragment>
+                            )
+                        }
+                        )
+                        }
+                    </Grid>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
                         Cancel
                     </Button>
-                    <Button disabled={Object.keys(state).length === 0} onClick={handleSubmit(onSubmit)} color="primary">
+                    <Button onClick={handleSubmit(onSubmit)} color="primary">
                         Create GatePass
                     </Button>
                     {/* {gatePassData && ready && <PDFDownloadLink

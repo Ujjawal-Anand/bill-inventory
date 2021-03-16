@@ -27,6 +27,11 @@ export const openAddItemDialog = (dispatch) => ({
   payload: dispatch
 });
 
+export const openUpdateStockDialog = (dispatch) => ({
+  type: 'UPDATE_STOCK_DIALOG',
+  payload: dispatch
+})
+
 export const openCreateGatePassDialog = (dispatch) => ({
   type: 'CREATE_GATE_PASS',
   payload: dispatch

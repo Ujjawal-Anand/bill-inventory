@@ -100,7 +100,7 @@ function InvoiceDetails() {
             })
         }
         lastPaid={parseFloat(invoice.amountPaid)} />
-      <CreateGatePassDialog items={invoice.items} />
+      <CreateGatePassDialog invoice={invoice} />
     </div>
   );
 }

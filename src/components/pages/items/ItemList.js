@@ -14,7 +14,7 @@ import {
     confirmDeleteAction
 } from '../../../redux/actions/alertDialogActions';
 import {
-    openAddItemDialog
+    openAddItemDialog, openUpdateStockDialog
 } from '../../../redux/actions/alertDialogActions';
 
 // Component
@@ -52,13 +52,20 @@ function ItemList(props) {
         setAnchorEl(null);
     }
 
+    const handleUpdateStock = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        dispatch(openUpdateStockDialog({ openUpdateStock: true, item }));
+        setAnchorEl(null);
+    }
+
     return (
 
         <ItemListTable>
             <p className="number">{index + 1}</p>
 
-            <p className="name">{item.itemName}</p>
-            <p className="displayName">{item.displayName ? item.displayName : item.itemName}</p>
+            <p className="name">{item.itemName}<br />{item.displayName ? item.displayName : ''}</p>
+            {/* <p className="displayName">{item.displayName ? item.displayName : item.itemName}</p> */}
 
 
             <p className="rate">
@@ -95,6 +102,9 @@ function ItemList(props) {
                     </MenuItem>
                     <MenuItem onClick={handleEditItem}>
                         <p>Edit Item</p>
+                    </MenuItem>
+                    <MenuItem onClick={handleUpdateStock}>
+                        <p>Update Stock</p>
                     </MenuItem>
 
                 </Menu>

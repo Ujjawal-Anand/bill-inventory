@@ -13,7 +13,7 @@ import { createItem, editItem } from '../../redux/actions/itemActions';
 import { openAddItemDialog } from '../../redux/actions/alertDialogActions';
 
 
-export default function AddItemDialog() {
+export default function AddItemDialog({ companyName }) {
     const { register, handleSubmit, errors } = useForm();
     const dispatch = useDispatch();
     const currency = '₹';
@@ -31,7 +31,10 @@ export default function AddItemDialog() {
         data = {
             createdAt: new Date(),
             editedAt: new Date(),
-            ...data
+            itemName: data.itemName,
+            displayName: data.displayName,
+            sellingPrice: data.sellingPrice,
+            stock: { [companyName]: data[companyName] }
         };
         item ? dispatch(editItem(item.id, data)) : dispatch(createItem(data));
         handleClose()
@@ -96,12 +99,12 @@ export default function AddItemDialog() {
                     />
                     <TextField
                         label="Stock In Shop"
-                        name="stockInShop"
+                        name={companyName}
                         error={errors.stockInShop && true}
                         inputRef={register({ required: false, minLength: 1 })}
                         helperText={errors.stockInShop && 'Invalid Input'}
                         size="small"
-                        defaultValue={item ? item.stockInShop : 0}
+                        defaultValue={item && item.stock ? item.stock[companyName] : 0}
                         fullWidth
                         variant="outlined"
                         margin="dense"

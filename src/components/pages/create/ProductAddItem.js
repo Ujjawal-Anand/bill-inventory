@@ -2,12 +2,10 @@ import React, { useState, memo, useEffect } from 'react';
 //Vendor
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import { InstantSearch } from 'react-instantsearch-dom';
 import Grid from '@material-ui/core/Grid';
 import { useForm } from 'react-hook-form';
 // Custom
 import { Button } from '../../styledComponents/shared/Button';
-import searchClient from '../../../others/algoliaSearchClient'
 import CustomAutocomplete from './AutocompleteField';
 import { useSelector } from 'react-redux';
 
@@ -46,9 +44,8 @@ function ProductAddItem(props) {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={4} lg={4}>
-        <InstantSearch indexName="ITEM_LIST" searchClient={searchClient()}>
-          <CustomAutocomplete />
-        </InstantSearch>
+
+        <CustomAutocomplete />
         {/* <TextField
           size="small"
           fullWidth

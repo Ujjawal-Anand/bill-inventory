@@ -17,11 +17,19 @@ import ItemList from './ItemList';
 import ItemListLoader from '../../loaders/dashboard/ItemListLoader';
 import NoItem from '../../loaders/welcome/NoItem';
 import AddItemDialog from '../../dialog/AddItemDialog'
+import UpdateStockDialog from '../../dialog/UpdateStockDialog'
 
 // Component
 function Items() {
   const dispatch = useDispatch();
+  const settings = useSelector(
+    (state) => state.firebase.profile && state.firebase.profile.settings
+  );
   const items = useSelector((state) => state.firestore.ordered.items);
+  const warehouse = [...useSelector((state) => state.firestore.ordered.warehouse ?
+    state.firestore.ordered.warehouse : [])];
+
+
   let tableListItems;
 
   if (isLoaded(items) && isEmpty(items))
@@ -31,13 +39,21 @@ function Items() {
         <NoItem />
       </>
     );
+  if (isLoaded(settings)) {
+    warehouse.push({
+      name: settings.companyName,
+      address: settings.companyAddress,
+      mobile: settings.mobile
+    })
+  }
 
-  if (isLoaded(items)) {
+
+  if (isLoaded(items) && isLoaded(settings) && isLoaded(warehouse)) {
     tableListItems = items.map((item, index) => (
       <ItemList item={item} key={item.id} index={index} />
     ));
   }
-  if (!isLoaded(items)) {
+  if (!isLoaded(items) || !isLoaded(settings) || !isLoaded(warehouse)) {
     tableListItems = Array.from({ length: 10 }).map((item, index) => (
       <ItemListLoader key={index} />
     ));
@@ -54,14 +70,14 @@ function Items() {
           <ItemListHead>
             <p className="listHead number">Sr.No.</p>
             <p className="listHead name">Name</p>
-            <p className="listHead displayName">Display Name</p>
             <p className="listHead rate">Rate</p>
             <p className="listHead option"></p>
           </ItemListHead>
           {tableListItems}
         </ItemTable>
       </div>
-      <AddItemDialog />
+      {settings && <AddItemDialog companyName={settings.companyName} />}
+      {warehouse && <UpdateStockDialog warehouse={warehouse} />}
     </div>
   );
 }

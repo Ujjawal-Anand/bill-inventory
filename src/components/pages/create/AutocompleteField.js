@@ -2,7 +2,6 @@ import React from "react"
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
-import { connectAutoComplete } from "react-instantsearch-dom";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { useDispatch, useSelector } from 'react-redux';
@@ -51,6 +50,5 @@ const AutocompleteField = ({ hits = [], refine }) => {
         />
     )
 }
-const CustomAutocomplete = connectAutoComplete(AutocompleteField);
 
-export default CustomAutocomplete;
+export default AutocompleteField;
