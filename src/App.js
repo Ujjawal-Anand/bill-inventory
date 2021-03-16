@@ -8,14 +8,15 @@ import SideBar from './components/sidebar/SideBar';
 
 // Firestore
 import { useFirestoreConnect, isLoaded, isEmpty } from 'react-redux-firebase';
-import { useSelector } from 'react-redux';
-import SignUp from './components/pages/auth/SignUp';
+import { useSelector, useDispatch } from 'react-redux';
+// import SignUp from './components/pages/auth/SignUp';
 import Login from './components/pages/auth/Login';
 import BottomNavigation from './components/bottomNavigation/BottomNavigation';
 import AlertDialog from './components/dialog/Dialog';
 import ForgotPassword from './components/pages/auth/ForgotPassword';
 import AlertSnackbar from './components/snackbar/SnackBar';
 import AppLoader from './components/loaders/app/AppLoader';
+import { loadItems } from "./redux/actions/itemActions";
 
 const LazyApp = Loadable({
   loader: () => import('./AllAppRoutes'),
@@ -23,7 +24,9 @@ const LazyApp = Loadable({
 });
 
 function App() {
+  const dispatch = useDispatch();
   const auth = useSelector((state) => state.firebase.auth);
+  dispatch(loadItems());
 
   useFirestoreConnect([
     {
@@ -41,6 +44,14 @@ function App() {
         { collection: 'items', orderBy: ['createdAt', 'desc'] }
       ],
       storeAs: 'items'
+    },
+    {
+      collection: 'users',
+      doc: auth.uid || ' ',
+      subcollections: [
+        { collection: 'warehouse', orderBy: ['createdAt', 'desc'] }
+      ],
+      storeAs: 'warehouse'
     }
   ]);
 
@@ -51,10 +62,10 @@ function App() {
   if (isEmpty(auth))
     return (
       <Switch>
-        <Route exact path="/register" component={SignUp} />
+        {/* <Route exact path="/register" component={SignUp} /> */}
         <Route exact path="/login" component={Login} />
         <Route exact path="/forgot" component={ForgotPassword} />
-        <Route render={() => <Redirect to="/register" />} />
+        <Route render={() => <Redirect to="/login" />} />
       </Switch>
     );
 

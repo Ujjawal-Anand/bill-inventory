@@ -16,18 +16,19 @@ function PieGraph() {
   }
 
   if (isLoaded(invoices)) {
-    const paidInvoice = invoices.filter((invoice) => invoice.paidStatus).length;
-    const pendingInvoice = invoices.filter((invoice) => !invoice.paidStatus)
+    const paidInvoice = invoices.filter((invoice) => invoice.paidStatus === "full-paid").length;
+    const partialPaidInvoice = invoices.filter((invoice) => invoice.paidStatus === "partial-paid").length;
+    const pendingInvoice = invoices.filter((invoice) => invoice.paidStatus === "unpaid")
       .length;
 
     const chartData = {
-      labels: ['Fulfilled Invoice', 'Pending Invoices'],
+      labels: ['Fulfilled Invoice', 'Partially Paid', 'Pending Invoices'],
       datasets: [
         {
           label: 'Rahu',
-          data: [paidInvoice, pendingInvoice],
-          backgroundColor: ['#24B47E3a', '#F037383a'],
-          borderColor: ['#24B47E', '#F03738'],
+          data: [paidInvoice, partialPaidInvoice, pendingInvoice],
+          backgroundColor: ['#24B47E3a', '#6772E53a', '#F037383a'],
+          borderColor: ['#24B47E', '#6772E5', '#F03738'],
           borderWidth: 1
         }
       ]

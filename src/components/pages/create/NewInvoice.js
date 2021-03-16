@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import { RadioInput } from '../../styledComponents/shared/RadioButton';
 import Grid from '@material-ui/core/Grid';
 import MomentUtils from '@date-io/moment';
+import moment from 'moment';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker
@@ -37,7 +38,7 @@ function NewInvoice(props) {
       : invoiceNum;
 
   const [invoiceMeta, setInvoiceMeta] = useState({
-    invoiceDate: new Date(),
+    invoiceDate: moment(new Date()).format('DD-MM-YYYY'),
     dueDate: new Date(),
     billableType: 'product',
     mobileNumber: '',
@@ -64,7 +65,7 @@ function NewInvoice(props) {
         companyName: settings.companyName,
         gstNumber: settings.gstNumber
       });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings]);
 
   //Loader For Create Full Page
@@ -78,7 +79,7 @@ function NewInvoice(props) {
     setInvoiceMeta({ ...invoiceMeta, dueDate: e._d });
   };
   const handleInvoiceDateChange = (e) => {
-    setInvoiceMeta({ ...invoiceMeta, invoiceDate: e._d });
+    setInvoiceMeta({ ...invoiceMeta, invoiceDate: moment(e._d).format('DD-MM-YYYY') });
   };
 
   // Submiting Invoice Details
@@ -87,12 +88,13 @@ function NewInvoice(props) {
       const finalObj = {
         ...data,
         ...metaData,
+        amountPaid: 0,
         companyAddress: settings.companyAddress,
         companyName: settings.companyName,
         gstNumber: settings.gstNumber,
         dueDate: invoiceMeta.dueDate,
         invoiceDate: invoiceMeta.invoiceDate,
-        paidStatus: false,
+        paidStatus: 'unpaid',
         remindedAt: new Date()
       };
       dispatch(createInvoice(finalObj));

@@ -88,9 +88,7 @@ function LoginForm() {
           Continue {loadingState && <i className="tio-sync spin-load"></i>}
         </Button>
       </form>
-      <p className="footer-text">
-        New to Billy? <Link to="/register">Create an Account</Link>
-      </p>
+
       <p className="footer-by ">
         Created By{' '}
         <a

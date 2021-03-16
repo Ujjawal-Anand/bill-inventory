@@ -1,19 +1,15 @@
 import React from 'react';
 //Vendor
-import { useSelector } from 'react-redux';
 import { isLoaded } from 'react-redux-firebase';
 // Custom
 import { Widget } from '../../../styledComponents/dashboard/Widget';
 import SmallSummaryCard from '../../../loaders/dashboard/SmallSummaryCard';
 
 // Component
-function PendingInvoice() {
-  const pendingInvoices = useSelector(
-    (state) =>
-      state.firestore.ordered.invoices &&
-      state.firestore.ordered.invoices.filter((invoice) => !invoice.paidStatus)
-        .length
-  );
+function PendingInvoice({ invoices }) {
+  const pendingInvoices = invoices && invoices.filter(
+    (invoice) => invoice.paidStatus === "unpaid").length
+
 
   if (!isLoaded(pendingInvoices)) {
     return <SmallSummaryCard />;

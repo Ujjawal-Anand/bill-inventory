@@ -5,7 +5,6 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import { InstantSearch } from 'react-instantsearch-dom';
 import Grid from '@material-ui/core/Grid';
 import { useForm } from 'react-hook-form';
-import nanoid from 'nanoid';
 // Custom
 import { Button } from '../../styledComponents/shared/Button';
 import searchClient from '../../../others/algoliaSearchClient'
@@ -41,8 +40,7 @@ function ProductAddItem(props) {
   const currency = props.currency === 'usd' ? '$' : '₹';
 
   const onSubmit = (data) => {
-    data = { id: nanoid(4), ...data };
-    props.handleAdd({ ...data, itemName: item.displayName });
+    props.handleAdd({ ...data, id: item.id, itemName: item.displayName });
   };
 
   return (

@@ -25,6 +25,7 @@ function SideBar() {
         color={'#6772E5'}
         routeTo="/create"
       />
+
       <NavLinks
         icon={'tio-add_circle'}
         name={'Items'}
@@ -36,6 +37,12 @@ function SideBar() {
         name={'Invoices'}
         color={'#FD5665'}
         routeTo="/invoices"
+      />
+      <NavLinks
+        icon={'tio-add_circle'}
+        name={'Warehouse'}
+        color={'#FDA734'}
+        routeTo="/warehouse"
       />
       <NavLinks
         icon={' tio-settings_vs'}

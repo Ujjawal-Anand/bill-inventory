@@ -1,5 +1,6 @@
 import history from '../../others/history';
 
+
 /* ******************* Create Invoice ******************* */
 
 export const createInvoice = (invoiceDetails) => (
@@ -61,19 +62,20 @@ export const deleteInovice = (invoiceId) => (
 
 /* **************** Change Payment Status *************** */
 
-export const updatePaymentStatus = (invoiceId, status) => (
+export const updatePaymentStatus = ({ invoiceId, status = 'unpaid', amountPaid = 0, paidAt }) => (
   dispatch,
   getState,
   { getFirebase }
 ) => {
   const uid = getState().firebase.auth.uid;
   const firestore = getFirebase().firestore();
+  console.log("id", invoiceId);
   firestore
     .collection('users')
     .doc(uid)
     .collection('invoices')
     .doc(invoiceId)
-    .update({ paidStatus: status })
+    .update({ paidStatus: status, amountPaid, paidAt })
     .then(() => {
       dispatch({ type: 'UPDATE_PAYMENT_STATUS' });
     })

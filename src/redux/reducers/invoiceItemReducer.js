@@ -9,8 +9,7 @@ const invoiceItemReducer = (state = initState, action) => {
         case 'ADD_INVOICE_ITEM':
             return action.payload ?
                 {
-                    ...action.payload,
-                    id: action.payload.objectID
+                    ...action.payload
                 } : initState;
         // case 'RESET_INVOICE_ITEM':
 

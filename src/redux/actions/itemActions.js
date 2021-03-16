@@ -1,5 +1,7 @@
 import history from '../../others/history';
 import { index } from '../../others/algoliaClient';
+import db from '../../db';
+
 
 /* ******************* Create Item ******************* */
 
@@ -10,33 +12,31 @@ export const createItem = (itemDetails) => (
 ) => {
     dispatch({ type: 'CREATE_BUTTON', payload: true });
     const uid = getState().firebase.auth.uid;
-    const currItem = getState().firebase.profile.currentItem;
     const firestore = getFirebase().firestore();
-    let path = '';
     firestore
         .collection('users')
         .doc(uid)
         .collection('items')
         .add({ ...itemDetails })
         .then((res) => {
-            path = res.id;
-            firestore
-                .collection('users')
-                .doc(uid)
-                .update({ currentItem: currItem + 1 });
-        })
-        .then((res) => {
             dispatch({ type: 'CREATE_ITEM', payload: itemDetails });
+
             // save item to algolia index
-            index.saveObject({
-                objectID: path,
+            const itemToAdd = {
+                id: res.id,
                 itemName: itemDetails.itemName,
                 displayName: itemDetails.displayName,
-                sellingPrice: itemDetails.sellingPrice
-            }, { autoGenerateObjectIDIfNotExist: true })
-                .then(({ objectID }) => {
-                    console.log(objectID);
+                sellingPrice: itemDetails.sellingPrice,
+                stockInShop: itemDetails.stockInShop
+            }
+            db.table('items').add(itemToAdd).then((id) => {
+                dispatch({
+                    type: 'CREATE_ITEM',
+                    payload: itemToAdd,
                 });
+            }
+
+            )
             // history.push(`/items`);
         })
         .catch((err) => {
@@ -45,6 +45,20 @@ export const createItem = (itemDetails) => (
         })
         .finally(() => dispatch({ type: 'CREATE_BUTTON', payload: false }));
 };
+
+/* ************* Load Items From IndexDB *************************** */
+export const loadItems = () => {
+    return (dispatch) => {
+        db.table('items')
+            .toArray()
+            .then((items) => {
+                dispatch({
+                    type: 'LOAD_ITEMS',
+                    payload: items,
+                });
+            });
+    };
+}
 
 /* ******************* Delete Item ******************* */
 
@@ -62,7 +76,15 @@ export const deleteItem = (itemId) => (
         .doc(itemId)
         .delete()
         .then(() => {
-            dispatch({ type: 'DELETE_SUCCESS_BAR' });
+            // delete item from indexDb
+            db.table('items')
+                .delete(itemId)
+                .then(() => {
+                    dispatch({
+                        type: 'DELETE_ITEM',
+                        payload: itemId
+                    });
+                });
         })
         .catch((err) => dispatch({ type: 'WENTWRONG_BAR' }));
     if (history.location.pathname !== '/') {
@@ -70,66 +92,27 @@ export const deleteItem = (itemId) => (
     }
 };
 
-/* **************** Change Payment Status *************** */
-
-export const updatePaymentStatus = (itemId, status) => (
-    dispatch,
-    getState,
-    { getFirebase }
+export const editItem = (itemId, newItemDetails) => (
+    dispatch, getState, { getFirebase }
 ) => {
+
     const uid = getState().firebase.auth.uid;
+
     const firestore = getFirebase().firestore();
+
     firestore
         .collection('users')
         .doc(uid)
         .collection('items')
         .doc(itemId)
-        .update({ paidStatus: status })
+        .update({ ...newItemDetails })
         .then(() => {
-            dispatch({ type: 'UPDATE_PAYMENT_STATUS' });
+            index.partialUpdateObject({ objectID: itemId, ...newItemDetails })
+            dispatch({ type: 'CREATE_ITEM', payload: newItemDetails });
+
         })
         .catch((err) => dispatch({ type: 'WENTWRONG_BAR' }));
-};
-
-/* ************* Send Email Item Reminder ************ */
-
-export const sendItemMail = (id) => (
-    dispatch,
-    getState,
-    { getFirebase }
-) => {
-    dispatch({ type: 'EMAILSEND_BUTTON', payload: true });
-
-    const lastReminder = getState()
-        .firestore.data.items[id].remindedAt.toDate()
-        .setHours(0, 0, 0, 0);
-    const today = new Date().setHours(0, 0, 0, 0);
-
-    const diff = Math.floor(Math.abs(today - lastReminder) / 1000 / 60 / 60 / 24);
-
-    // Stop Function if Reminded on same Day
-    if (diff === 0) {
-        dispatch({ type: 'EMAILSEND_BUTTON', payload: false });
-        return dispatch({ type: 'EMAILMAXLIMIT_BAR' });
+    if (history.location.pathname !== '/') {
+        history.push('/items');
     }
-
-    var itemRemindMail = getFirebase()
-        .functions()
-        .httpsCallable('itemRemindMail');
-    itemRemindMail(id)
-        .then((res) => {
-            const firestore = getFirebase().firestore();
-            const uid = getState().firebase.auth.uid;
-            firestore
-                .collection('users')
-                .doc(uid)
-                .collection('items')
-                .doc(id)
-                .update({ remindedAt: new Date() });
-        })
-        .then(() => {
-            dispatch({ type: 'EMAIL_SUCCESS_BAR' });
-            dispatch({ type: 'EMAILSEND_BUTTON', payload: false });
-        })
-        .catch((err) => dispatch({ type: 'WENTWRONG_BAR' }));
 };

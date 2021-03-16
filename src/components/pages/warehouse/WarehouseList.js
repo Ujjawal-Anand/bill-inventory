@@ -6,25 +6,20 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { useDispatch } from 'react-redux';
 // Custom
-import { ItemList as ItemListTable } from '../../styledComponents/items/itemTables';
+import { ItemList as WarehouseListTable } from '../../styledComponents/items/itemTables';
 import {
-    deleteItem
-} from '../../../redux/actions/itemActions';
+    deleteWarehouse
+} from '../../../redux/actions/warehouseActions';
 import {
     confirmDeleteAction
 } from '../../../redux/actions/alertDialogActions';
-import {
-    openAddItemDialog
-} from '../../../redux/actions/alertDialogActions';
 
 // Component
-function ItemList(props) {
-    const { item, index } = props;
+function WarehouseList(props) {
+    const { warehouse, index } = props;
     const [anchorEl, setAnchorEl] = useState(null);
     const dispatch = useDispatch();
     const open = Boolean(anchorEl);
-
-    const currencySign = item.currency === 'usd' ? '$' : '₹';
 
     const handleOptionOpen = (event) => {
         event.stopPropagation();
@@ -38,35 +33,24 @@ function ItemList(props) {
         setAnchorEl(null);
     };
 
-    const handleDeleteItem = (e) => {
+    const handleDeleteWarehouse = (e) => {
         e.stopPropagation();
         e.preventDefault();
-        dispatch(confirmDeleteAction(deleteItem(item.id)));
+        dispatch(confirmDeleteAction(deleteWarehouse(warehouse.id)));
         setAnchorEl(null);
     };
 
-    const handleEditItem = (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        dispatch(openAddItemDialog({ open: true, item }));
-        setAnchorEl(null);
-    }
-
     return (
 
-        <ItemListTable>
+        <WarehouseListTable>
             <p className="number">{index + 1}</p>
 
-            <p className="name">{item.itemName}</p>
-            <p className="displayName">{item.displayName ? item.displayName : item.itemName}</p>
+            <p className="name">{warehouse.name}</p>
+            <p className="displayName">{warehouse.address}</p>
 
 
             <p className="rate">
-                {currencySign +
-                    item.sellingPrice.toLocaleString('en-US', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    })}
+                {warehouse.mobile}
             </p>
 
             <p className="option">
@@ -90,18 +74,15 @@ function ItemList(props) {
                     open={open}
                     onClose={handleOptionClose}
                 >
-                    <MenuItem onClick={handleDeleteItem}>
-                        <p>Delete Item</p>
-                    </MenuItem>
-                    <MenuItem onClick={handleEditItem}>
-                        <p>Edit Item</p>
+                    <MenuItem onClick={handleDeleteWarehouse}>
+                        <p>Delete Warehouse</p>
                     </MenuItem>
 
                 </Menu>
             </p>
-        </ItemListTable>
+        </WarehouseListTable>
 
     );
 }
 
-export default ItemList;
+export default WarehouseList;

@@ -76,6 +76,7 @@ function InvoicePDF(props) {
     taxType,
     taxPercent,
     items,
+    amountPaid = 0,
     totalAmount,
     totalExclusiveTax,
     totalInclusiveTax,
@@ -104,16 +105,20 @@ function InvoicePDF(props) {
             <Date>
               <p>
                 Invoice Date :{' '}
-                {moment(invoiceDate.toDate()).format('DD-MM-YYYY')}
+                {invoiceDate}
               </p>
               <p>Due Date : {moment(dueDate.toDate()).format('DD-MM-YYYY')}</p>
               <p>
                 Status :{' '}
-                {paidStatus ? (
+                {paidStatus === 'full-paid' ? (
                   <span style={{ color: '#219735' }}>Fulfilled</span>
+                ) : paidStatus === 'partial-paid' ? (<>
+                  <span style={{ color: '#6772E5' }}>Partialy Paid</span> <br />
+                  <span>Amount Paid: ₹{amountPaid} </span>
+                </>
                 ) : (
-                    <span style={{ color: '#FD5665' }}>Pending</span>
-                  )}
+                  <span style={{ color: '#FD5665' }}>Pending</span>
+                )}
               </p>
             </Date>
           </BillColumn>
@@ -140,7 +145,7 @@ function InvoicePDF(props) {
         <BillDetails>
 
           <BillColumn>
-            <Date style={{ textTransform: 'capitalize'}}>Total Amount in words: {numWords(totalAmount)}</Date>
+            <Date style={{ textTransform: 'capitalize' }}>Total Amount in words: {numWords(totalAmount)}</Date>
             {note && <Date>Note: {note}</Date>}
           </BillColumn>
           <BillColumn>

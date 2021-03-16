@@ -25,4 +25,9 @@ export const closeDialog = (dispatch) => ({
 export const openAddItemDialog = (dispatch) => ({
   type: 'ADD_ITEM_CNF',
   payload: dispatch
-})
+});
+
+export const openCreateGatePassDialog = (dispatch) => ({
+  type: 'CREATE_GATE_PASS',
+  payload: dispatch
+});

@@ -28,7 +28,7 @@ function Items() {
     return (
       <>
         <Header title={'Items'} />
-        <NoItem/>
+        <NoItem />
       </>
     );
 
@@ -49,7 +49,7 @@ function Items() {
         <ItemTable style={{ margin: '0 auto' }}>
           <TableHeading>
             <h2>Items List</h2>
-            <Button onClick={() => dispatch(openAddItemDialog(true))}>Add Item</Button>
+            <Button onClick={() => dispatch(openAddItemDialog({ open: true }))}>Add Item</Button>
           </TableHeading>
           <ItemListHead>
             <p className="listHead number">Sr.No.</p>

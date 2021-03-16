@@ -1,10 +1,12 @@
 import React from "react"
+
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import { connectAutoComplete } from "react-instantsearch-dom";
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+
 
 import {
     addItemInvoiceItem
@@ -14,12 +16,15 @@ import {
 
 const AutocompleteField = ({ hits = [], refine }) => {
     const dispatch = useDispatch();
+    const items = useSelector((state) => state.item.items)
+    console.log(items);
+
 
     return (
         <Autocomplete
             id="free-solo-demo"
             freeSolo
-            options={hits}
+            options={items}
             // onClose={(event, reason) => console.log(event, reason)}
             getOptionSelected={(option, value) => console.log(option, value)}
             getOptionLabel={(option) => option.itemName}

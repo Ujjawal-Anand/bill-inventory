@@ -5,7 +5,7 @@ const initState = {
 const snackbarReducer = (state = initState, action) => {
   switch (action.type) {
     case 'DELETE_SUCCESS_BAR':
-      return { message: 'Invoice Deleted' };
+      return { message: 'Deleted Successfully' };
 
     case 'PASSWORD_SUCCESS_BAR':
       return { message: 'Password Updated' };

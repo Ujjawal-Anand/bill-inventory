@@ -72,13 +72,12 @@ const BillRow = styled.View`
   padding: 8px 0;
 `;
 const BillRowHead = styled(BillRow)`
-  background-color: #333;
   font-size: 15px;
-  border-radius: 2px;
-  color: white;
+  border: 1px solid #4a4a4a;
+  color: black;
 `;
 const BillDataText = styled.Text`
-  width: 80%;
+  width: 60%;
   padding: 0 5px;
   font-size: 12px;
 `;
@@ -113,20 +112,21 @@ function InvoicePDF(props) {
     taxType,
     taxPercent,
     items,
+    amountPaid,
     totalAmount,
     totalExclusiveTax,
     totalInclusiveTax,
     totalWithExclusiveTax
   } = props.invoice;
   const currencySign = currency === 'usd' ? '$' : '₹';
+  const amountDue = parseFloat(totalAmount) - parseFloat(amountPaid);
   const itemList = items.map(({ itemName, rate, qty, amount, id }, i) => (
     <BillRow key={id}>
       <BillDataSerial>{i + 1}</BillDataSerial>
       <BillDataText>{itemName} .</BillDataText>
-      <BillDataNum>{rate.toFixed(2)}</BillDataNum>
+      <BillDataNum>₹{rate.toFixed(2)}</BillDataNum>
       <BillDataNum style={{ width: '6%' }}>{qty}</BillDataNum>
-      <BillDataNum></BillDataNum>
-      <BillDataNum>{amount.toFixed(2)}</BillDataNum>
+      <BillDataNum>₹{amount.toFixed(2)}</BillDataNum>
     </BillRow>
   ));
 
@@ -139,11 +139,12 @@ function InvoicePDF(props) {
             <Details>{companyAddress}</Details>
             <InvoiceNumber>{gstNumber && `GSTIN: ${gstNumber}`}</InvoiceNumber>
             <Details style={{ marginTop: '40px' }}>
-              Invoice Date : {moment(invoiceDate.toDate()).format('DD-MM-YYYY')}
+              Invoice Date : {invoiceDate}
             </Details>
             <Details>
               Due Date : {moment(dueDate.toDate()).format('DD-MM-YYYY')}
             </Details>
+
 
             <Textt></Textt>
           </BillColumnLeft>
@@ -159,13 +160,12 @@ function InvoicePDF(props) {
         </BillDetails>
         <BillTable>
           <BillRowHead>
-            <BillDataSerial>#</BillDataSerial>
+            <BillDataSerial>Sr.</BillDataSerial>
             <BillDataText>
               Item Name
             </BillDataText>
             <BillDataNum>Rate</BillDataNum>
             <BillDataNum style={{ width: '6%' }}>Qty</BillDataNum>
-            <BillDataNum> </BillDataNum>
             <BillDataNum>Amount</BillDataNum>
           </BillRowHead>
         </BillTable>
@@ -192,6 +192,8 @@ function InvoicePDF(props) {
                     Includes GST {taxPercent}%:{' '}
                   </Details>
                 )}
+                <Details style={{ marginLeft: '-50%' }}>Paid:</Details>
+                <Details style={{ marginLeft: '-50%' }}>Due:</Details>
               </BillTotal>
               <BillTotal>
                 <Details>
@@ -249,7 +251,10 @@ function InvoicePDF(props) {
                   </Details>
 
                 )}
+                <Details>{currencySign}{' '}{amountPaid}</Details>
+                <Details>{currencySign}{' '}{amountDue}</Details>
                 <Details style={{ marginTop: '50px' }}>Signature</Details>
+
 
               </BillTotal>
 

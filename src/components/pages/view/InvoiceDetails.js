@@ -11,16 +11,12 @@ import InvoicePDF from './InvoicePDF';
 import { Button } from '../../styledComponents/shared/Button';
 import { ButtonDiv } from '../../styledComponents/incvoiceDetails/InvoiceDetailButtons';
 import {
-  confirmDeleteAction,
-  confirmEmailReminder,
-  confirmPaymentChangeAction
+  openAddItemDialog,
+  openCreateGatePassDialog
 } from '../../../redux/actions/alertDialogActions';
-import {
-  deleteInovice,
-  sendInvoiceMail,
-  updatePaymentStatus
-} from '../../../redux/actions/invoiceActions';
 import AppLoader from '../../loaders/app/AppLoader';
+import PaymentChangeDialog from '../../dialog/PaymentChangeDialog';
+import CreateGatePassDialog from '../../dialog/CreateGatePassDialog';
 
 // Component
 function InvoiceDetails() {
@@ -35,18 +31,9 @@ function InvoiceDetails() {
 
   if (!isLoaded(invoice)) return <AppLoader />;
 
-  const handleDeleteInvoice = () => {
-    dispatch(confirmDeleteAction(deleteInovice(id)));
-  };
-
-  const handleEmailInvoice = () => {
-    dispatch(confirmEmailReminder(sendInvoiceMail(id)));
-  };
 
   const handlePaymentStatus = () => {
-    dispatch(
-      confirmPaymentChangeAction(updatePaymentStatus(id, !invoice.paidStatus))
-    );
+    dispatch(openAddItemDialog({ open: true }))
   };
 
   return (
@@ -66,15 +53,15 @@ function InvoiceDetails() {
                 : 'tio-checkmark_circle_outlined'
             }
           ></i>{' '}
-          {invoice.paidStatus ? 'Mark Pending' : 'Mark Paid'}
+          Add Payment
           {loadingState && <i className="tio-sync spin-load"></i>}
         </Button>
 
         <Button
-          onClick={handleEmailInvoice}
-          disabled={invoice.paidStatus || loadingState}
+          onClick={() => dispatch(openCreateGatePassDialog(true))}
+          disabled={loadingState}
         >
-          <i className="tio-send"></i> Send Email
+          <i className="tio-send"></i> Create GatePass
         </Button>
 
         <Button
@@ -95,10 +82,25 @@ function InvoiceDetails() {
         <Button as="a" href={pdfUrl} target="_blank" secondary>
           <i className="tio-print"></i> Print
         </Button>
-        <Button color="#FD5665" onClick={handleDeleteInvoice}>
+        {/* <Button color="#FD5665" onClick={handleDeleteInvoice}>
           <i className="tio-delete"></i> Delete
-        </Button>
+        </Button> */}
       </ButtonDiv>
+      <PaymentChangeDialog
+        invoiceId={id}
+        totalAmount={
+          invoice.taxEnable === 'true' ?
+            invoice.totalWithExclusiveTax.toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            }) :
+            invoice.totalAmount.toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            })
+        }
+        lastPaid={parseFloat(invoice.amountPaid)} />
+      <CreateGatePassDialog items={invoice.items} />
     </div>
   );
 }

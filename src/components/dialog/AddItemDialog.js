@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
-import { createItem } from '../../redux/actions/itemActions';
+import { createItem, editItem } from '../../redux/actions/itemActions';
 import { openAddItemDialog } from '../../redux/actions/alertDialogActions';
 
 
@@ -17,13 +17,13 @@ export default function AddItemDialog() {
     const { register, handleSubmit, errors } = useForm();
     const dispatch = useDispatch();
     const currency = '₹';
-    const { open } = useSelector(
+    const { open, item } = useSelector(
         (state) => state.alertState
     );
 
 
     const handleClose = () => {
-        dispatch(openAddItemDialog(false));
+        dispatch(openAddItemDialog({ open: false }));
     };
 
     const onSubmit = (data) => {
@@ -33,20 +33,18 @@ export default function AddItemDialog() {
             editedAt: new Date(),
             ...data
         };
-        dispatch(createItem(data));
+        item ? dispatch(editItem(item.id, data)) : dispatch(createItem(data));
         handleClose()
-
-        console.log(data)
     };
 
 
     return (
         <div>
-            
+
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Add Item</DialogTitle>
                 <DialogContent>
-                    
+
                     <TextField
                         autoFocus
                         label="Item Name"
@@ -58,6 +56,7 @@ export default function AddItemDialog() {
                         fullWidth
                         variant="outlined"
                         margin="dense"
+                        defaultValue={item ? item.itemName : undefined}
                         required
 
                     />
@@ -73,6 +72,7 @@ export default function AddItemDialog() {
                         required
                         variant="outlined"
                         margin="dense"
+                        defaultValue={item ? item.sellingPrice : undefined}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -89,6 +89,19 @@ export default function AddItemDialog() {
                         inputRef={register({ required: false, minLength: 2 })}
                         helperText={errors.displayName && 'Invalid Input'}
                         size="small"
+                        fullWidth
+                        variant="outlined"
+                        defaultValue={item ? item.displayName : undefined}
+                        margin="dense"
+                    />
+                    <TextField
+                        label="Stock In Shop"
+                        name="stockInShop"
+                        error={errors.stockInShop && true}
+                        inputRef={register({ required: false, minLength: 1 })}
+                        helperText={errors.stockInShop && 'Invalid Input'}
+                        size="small"
+                        defaultValue={item ? item.stockInShop : 0}
                         fullWidth
                         variant="outlined"
                         margin="dense"

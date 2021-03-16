@@ -1,4 +1,4 @@
-const initState = { alert: false, open: false };
+const initState = { alert: false, open: false, openCreateGatepass: false };
 
 const alertReducer = (state = initState, action) => {
   switch (action.type) {
@@ -24,7 +24,8 @@ const alertReducer = (state = initState, action) => {
 
     case 'ADD_ITEM_CNF':
       return {
-        open: action.payload
+        open: action.payload.open,
+        item: action.payload.item
       };
 
     case 'PAYCHANGE_CNF':
@@ -53,6 +54,10 @@ const alertReducer = (state = initState, action) => {
         yesBtn: 'Send Reminder',
         noBtn: 'Cancel',
         alertFn: action.payload
+      };
+    case 'CREATE_GATE_PASS':
+      return {
+        openCreateGatepass: action.payload
       };
     case 'CLOSE_DIALOG':
       return {

@@ -1,6 +1,5 @@
 import React from 'react';
 //Vendor
-import { useSelector } from 'react-redux';
 import { isLoaded } from 'react-redux-firebase';
 import { Link } from 'react-router-dom';
 // Custom
@@ -14,12 +13,9 @@ import { FlatButton } from '../../../styledComponents/shared/Button';
 import InvoiceListLoader from '../../../loaders/dashboard/InvoiceListLoader';
 
 // Component
-function RecentInvoices() {
-  const invoices = useSelector(
-    (state) =>
-      state.firestore.ordered.invoices &&
-      state.firestore.ordered.invoices.slice(0, 5)
-  );
+function RecentInvoices({ invoices }) {
+  invoices = invoices && invoices.slice(0, 10)
+
   let tableListItems;
 
   if (isLoaded(invoices)) {
