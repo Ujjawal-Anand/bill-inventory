@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 // import { isLoaded } from 'react-redux-firebase';
 import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import nanoid from 'nanoid';
+import { nanoid } from 'nanoid';
 
 
 // Custom

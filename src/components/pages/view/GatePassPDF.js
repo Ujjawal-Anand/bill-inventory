@@ -112,7 +112,7 @@ function GatePassPDF(props) {
           <BillColumnLeft>
             <Textt>{companyName}</Textt>
             <Details>{companyAddress}</Details>
-            <Details style={{ marginTop: '10px' }}>
+            <Details>
               GatePass Date : {new Date().toLocaleDateString()}
             </Details>
             <Details>Delivery Date : {new Date(deliveryDate).toLocaleDateString()} </Details>
@@ -131,6 +131,11 @@ function GatePassPDF(props) {
           </BillRowHead>
         </BillTable>
         {itemList}
+        <BillDetails>
+          <BillColumnRight>
+            <Details style={{ marginTop: '20px' }}>Signature</Details>
+          </BillColumnRight>
+        </BillDetails>
       </BillPage>
     </Document>
   );

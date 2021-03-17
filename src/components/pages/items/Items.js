@@ -32,11 +32,11 @@ function Items() {
 
   let tableListItems;
 
-  if (isLoaded(items) && isEmpty(items))
+  if (isLoaded(items) && isLoaded(settings) && isEmpty(items))
     return (
       <>
         <Header title={'Items'} />
-        <NoItem />
+        <NoItem companyName={settings.companyName} />
       </>
     );
   if (isLoaded(settings)) {

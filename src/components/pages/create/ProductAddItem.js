@@ -1,4 +1,4 @@
-import React, { useState, memo, useEffect } from 'react';
+import React, { useState, memo } from 'react';
 //Vendor
 import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -6,8 +6,9 @@ import Grid from '@material-ui/core/Grid';
 import { useForm } from 'react-hook-form';
 // Custom
 import { Button } from '../../styledComponents/shared/Button';
-import CustomAutocomplete from './AutocompleteField';
 import { useSelector } from 'react-redux';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import Typography from '@material-ui/core/Typography';
 
 
 
@@ -15,37 +16,56 @@ import { useSelector } from 'react-redux';
 function ProductAddItem(props) {
   const { register, handleSubmit, errors } = useForm();
   const [form, setForm] = useState({ itemName: '', rate: '', qty: 1 });
-  const item = useSelector(
-    (state) => state.invoiceItem
-  );
-  console.log(item);
+  const items = useSelector((state) => state.item.items)
+
   const updateFrom = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value, rate: item.sellingPrice });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  useEffect(() => {
-    setForm({
-      ...form,
-      rate: item.sellingPrice,
-      itemName: item.itemName,
-      displayName: item.displayName,
-      id: item.id
-    })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [item]
-  )
 
   const currency = props.currency === 'usd' ? '$' : '₹';
 
   const onSubmit = (data) => {
-    props.handleAdd({ ...data, id: item.id, itemName: item.displayName });
+    console.log(data)
+    // here update the rate
+    props.handleAdd({ ...form, ...data });
   };
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={4} lg={4}>
 
-        <CustomAutocomplete />
+        <Autocomplete
+          {...props}
+          id="free-solo-demo"
+          freeSolo
+          options={items}
+          getOptionLabel={(option) => option.itemName}
+          renderInput={(params) => (
+            <TextField {...params} name="itemName" variant="outlined"
+              margin="dense" label="Item Name" />
+          )}
+          renderOption={(option) => {
+            return (
+              <Grid container alignItems="center">
+
+                <Grid item xs>
+                  {option.itemName}
+
+                  <Typography variant="body2" color="textSecondary">
+                    {option.displayName} Rate: ₹{option.sellingPrice}
+                  </Typography>
+                </Grid>
+              </Grid>
+            );
+          }}
+          onChange={(event, value) => setForm({
+            ...form,
+            itemName: value.displayName ? value.displayName : value.itemName,
+            rate: value.sellingPrice,
+            id: value.id
+          })}
+        />
         {/* <TextField
           size="small"
           fullWidth
@@ -112,8 +132,8 @@ function ProductAddItem(props) {
           type="number"
           label="Qty"
           name="qty"
-          value={form.qty}
           onChange={updateFrom}
+          value={form.qty}
           inputRef={register({ required: true, min: 0, max: 999 })}
           variant="outlined"
           margin="dense"
@@ -130,6 +150,7 @@ function ProductAddItem(props) {
           margin="dense"
           label="Amount"
           name="amount"
+          onChange={updateFrom}
           value={(form.rate * form.qty).toFixed(2)}
           inputRef={register({ required: true, min: 0 })}
           error={errors.amount && true}

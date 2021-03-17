@@ -1,5 +1,5 @@
 import history from '../../others/history';
-import db from '../../db';
+import { db } from '../../models/db';
 
 
 /* ******************* Create Item ******************* */
@@ -23,19 +23,9 @@ export const createItem = (itemDetails) => (
             // save item to algolia index
             const itemToAdd = {
                 id: res.id,
-                itemName: itemDetails.itemName,
-                displayName: itemDetails.displayName,
-                sellingPrice: itemDetails.sellingPrice,
-                stockInShop: itemDetails.stockInShop
+                ...itemDetails
             }
-            db.table('items').add(itemToAdd).then((id) => {
-                dispatch({
-                    type: 'CREATE_ITEM',
-                    payload: itemToAdd,
-                });
-            }
-
-            )
+            console.log(itemToAdd)
             // history.push(`/items`);
         })
         .catch((err) => {
@@ -55,6 +45,7 @@ export const loadItems = () => {
                     type: 'LOAD_ITEMS',
                     payload: items,
                 });
+                console.log("items", items)
             });
     };
 }
@@ -90,6 +81,8 @@ export const deleteItem = (itemId) => (
         history.push('/items');
     }
 };
+
+/* ******************* Edit Item ******************* */
 
 export const editItem = (itemId, newItemDetails) => (
     dispatch, getState, { getFirebase }

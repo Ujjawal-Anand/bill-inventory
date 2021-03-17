@@ -97,6 +97,7 @@ function NewInvoice(props) {
         paidStatus: 'unpaid',
         remindedAt: new Date()
       };
+      console.log("final Object", finalObj)
       dispatch(createInvoice(finalObj));
       console.log(finalObj)
     };

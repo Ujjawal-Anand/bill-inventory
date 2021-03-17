@@ -36,6 +36,7 @@ export default function AddItemDialog({ companyName }) {
             sellingPrice: data.sellingPrice,
             stock: { [companyName]: data[companyName] }
         };
+        console.log(data);
         item ? dispatch(editItem(item.id, data)) : dispatch(createItem(data));
         handleClose()
     };

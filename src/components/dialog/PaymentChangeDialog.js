@@ -13,6 +13,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { nanoid } from 'nanoid';
 
 
 import { updatePaymentStatus } from '../../redux/actions/invoiceActions';
@@ -20,6 +21,13 @@ import { openCreateGatePassDialog } from '../../redux/actions/alertDialogActions
 
 
 export default function PaymentChangeDialog({ totalAmount, invoiceId, lastPaid = 0 }) {
+    const formatNum = (num) =>
+        num.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    const totalAmountLeftToPay = parseFloat(totalAmount) - parseFloat(lastPaid);
+    const fullAmountLable = `Full Payment ₹${formatNum(totalAmountLeftToPay)}`
     const { register, handleSubmit, errors } = useForm();
     const [value, setValue] = useState('full-paid');
 
@@ -27,13 +35,6 @@ export default function PaymentChangeDialog({ totalAmount, invoiceId, lastPaid =
     const { open } = useSelector(
         (state) => state.alertState ? state.alertState : false
     );
-
-    const formatNum = (num) =>
-        num.toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-
 
     const handleClose = () => {
         dispatch(openCreateGatePassDialog(false));
@@ -44,15 +45,17 @@ export default function PaymentChangeDialog({ totalAmount, invoiceId, lastPaid =
     };
 
     const onSubmit = (data) => {
+        const amount = parseFloat(value === "full-paid" ? totalAmount : data.amount)
+        const id = nanoid(8);
 
-        data = {
+        const paymentData = {
             invoiceId,
-            paidAt: new Date(),
-            status: value,
-            amountPaid: parseFloat(formatNum(value === "full-paid" ? totalAmount : data.amount)) + lastPaid
+            status: amount >= totalAmountLeftToPay ? 'full-paid' : value,
+            amountPaid: amount + lastPaid,
+            paymentHistory: { id, paidAt: new Date(), amount, createdBy: "" }
         };
         console.log(data);
-        dispatch(updatePaymentStatus(data));
+        dispatch(updatePaymentStatus(paymentData));
         handleClose()
     };
 
@@ -66,7 +69,7 @@ export default function PaymentChangeDialog({ totalAmount, invoiceId, lastPaid =
                     <FormControl component="fieldset">
                         <FormLabel component="legend">Payment Status</FormLabel>
                         <RadioGroup aria-label="payment" name="payment1" value={value} onChange={handleChange}>
-                            <FormControlLabel value="full-paid" control={<Radio />} label="Full Payment" />
+                            <FormControlLabel value="full-paid" control={<Radio />} label={fullAmountLable} />
                             <FormControlLabel value="partial-paid" control={<Radio />} label="Partial Payment" />
                         </RadioGroup>
                         {value === 'partial-paid' && <TextField
@@ -91,7 +94,7 @@ export default function PaymentChangeDialog({ totalAmount, invoiceId, lastPaid =
 
                         />}
                     </FormControl>
-                    <p>Total Amount to be paid: ₹{totalAmount}</p>
+                    <p>Total Amount to be paid: ₹{formatNum(totalAmountLeftToPay)}</p>
 
                 </DialogContent>
                 <DialogActions>

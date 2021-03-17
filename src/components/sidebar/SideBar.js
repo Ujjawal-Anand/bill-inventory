@@ -21,7 +21,7 @@ function SideBar() {
       />
       <NavLinks
         icon={'tio-add_circle'}
-        name={'Create New'}
+        name={'New Invoice'}
         color={'#6772E5'}
         routeTo="/create"
       />

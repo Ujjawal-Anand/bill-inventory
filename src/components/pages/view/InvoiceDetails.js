@@ -90,17 +90,11 @@ function InvoiceDetails() {
         invoiceId={id}
         totalAmount={
           invoice.taxEnable === 'true' ?
-            invoice.totalWithExclusiveTax.toLocaleString('en-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2
-            }) :
-            invoice.totalAmount.toLocaleString('en-US', {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2
-            })
+            invoice.totalWithExclusiveTax :
+            invoice.totalAmount
         }
         lastPaid={parseFloat(invoice.amountPaid)} />
-      <CreateGatePassDialog invoice={invoice} />
+      <CreateGatePassDialog invoice={invoice} invoiceId={id} />
     </div>
   );
 }

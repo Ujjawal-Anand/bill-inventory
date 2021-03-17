@@ -17,6 +17,7 @@ import ForgotPassword from './components/pages/auth/ForgotPassword';
 import AlertSnackbar from './components/snackbar/SnackBar';
 import AppLoader from './components/loaders/app/AppLoader';
 import { loadItems } from "./redux/actions/itemActions";
+import { resetDatabase } from './models/db';
 
 const LazyApp = Loadable({
   loader: () => import('./AllAppRoutes'),
@@ -26,7 +27,6 @@ const LazyApp = Loadable({
 function App() {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.firebase.auth);
-  dispatch(loadItems());
 
   useFirestoreConnect([
     {
@@ -55,9 +55,18 @@ function App() {
     }
   ]);
 
-  if (!isLoaded(auth)) {
+  const items = useSelector((state) => state.firestore.ordered.items);
+
+
+  if (!isLoaded(auth) || !isLoaded(items)) {
     return <AppLoader />;
   }
+
+  if (isLoaded(items) && !isEmpty(items)) {
+    resetDatabase(items);
+  }
+  dispatch(loadItems());
+
 
   if (isEmpty(auth))
     return (

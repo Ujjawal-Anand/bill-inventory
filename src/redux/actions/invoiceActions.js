@@ -62,7 +62,32 @@ export const deleteInovice = (invoiceId) => (
 
 /* **************** Change Payment Status *************** */
 
-export const updatePaymentStatus = ({ invoiceId, status = 'unpaid', amountPaid = 0, paidAt }) => (
+export const updatePaymentStatus = ({ invoiceId, status = 'unpaid', amountPaid = 0, paymentHistory = {} }) => (
+  dispatch,
+  getState,
+  { getFirebase }
+) => {
+  const uid = getState().firebase.auth.uid;
+  const firestore = getFirebase().firestore();
+
+  console.log("id", invoiceId);
+  firestore
+    .collection('users')
+    .doc(uid)
+    .collection('invoices')
+    .doc(invoiceId)
+    .update({
+      paidStatus: status, amountPaid,
+      paymentHistory: getFirebase().firestore.FieldValue.arrayUnion(paymentHistory)
+    })
+    .then(() => {
+      dispatch({ type: 'UPDATE_PAYMENT_STATUS' });
+    })
+    .catch((err) => dispatch({ type: 'WENTWRONG_BAR' }));
+};
+
+/* ************* Add Gatepass to invoice *************** */
+export const addGatepass = (invoiceId, data) => (
   dispatch,
   getState,
   { getFirebase }
@@ -75,7 +100,9 @@ export const updatePaymentStatus = ({ invoiceId, status = 'unpaid', amountPaid =
     .doc(uid)
     .collection('invoices')
     .doc(invoiceId)
-    .update({ paidStatus: status, amountPaid, paidAt })
+    .update({
+      gatepasses: getFirebase().firestore.FieldValue.arrayUnion(data)
+    })
     .then(() => {
       dispatch({ type: 'UPDATE_PAYMENT_STATUS' });
     })

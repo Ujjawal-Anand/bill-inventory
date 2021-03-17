@@ -14,6 +14,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Grid from '@material-ui/core/Grid';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { pdf } from '@react-pdf/renderer';
+import { nanoid } from 'nanoid';
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker
@@ -23,18 +24,19 @@ import MomentUtils from '@date-io/moment';
 
 import GatePassPDF from '../pages/view/GatePassPDF';
 import { openCreateGatePassDialog } from '../../redux/actions/alertDialogActions';
+import { addGatepass } from '../../redux/actions/invoiceActions';
 
 
 
 
-
-export default function CreateGatePassDialog({ invoice }) {
+export default function CreateGatePassDialog({ invoice, invoiceId }) {
     const items = invoice.items;
     let defaultValues = { warehouseName: "", deliveryDate: new Date() }
     items.map(item => {
+
         return defaultValues[`items[${item.id}].qty`] = item.qty
     })
-    console.log(defaultValues)
+
 
     const { handleSubmit, errors, control } = useForm({ defaultValues });
     const warehouse = useSelector((state) => state.firestore.ordered.warehouse);
@@ -52,21 +54,34 @@ export default function CreateGatePassDialog({ invoice }) {
     const onSubmit = (data) => {
         // 
         let checkedItems = [];
-        console.log("data", data)
 
         for (let [key, value] of Object.entries(data.items)) {
             if (value.itemName) {
                 checkedItems = [...checkedItems, { ...value, id: key }]
             }
         }
+        const id = nanoid(8);
+
+
         if (checkedItems.length > 0) {
+            const gatePassData = {
+                id,
+                warehouseName: data.warehouseName,
+                deliveryDate: typeof (data.deliveryDate) === "object"
+                    && data.deliveryDate._d ? data.deliveryDate._d : new Date(),
+                items: checkedItems,
+                created_at: new Date(),
+                fullfilled: false,
+                created_by: ""
+            }
+            console.log("gate pass data", gatePassData)
             generatePdfDocument({
                 companyName: invoice.companyName,
                 companyAddress: invoice.companyAddress,
-                warehouseName: data.warehouseName,
-                deliveryDate: typeof (data.deliveryDate) === "object" ? data.deliveryDate._d : data.deliveryDate,
-                items: checkedItems
+                ...gatePassData
             });
+            dispatch(addGatepass(invoiceId, gatePassData));
+
             handleClose();
         }
     };
