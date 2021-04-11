@@ -36,11 +36,11 @@ function BottomNavigationn() {
             exact
           />
           <BottomNavigationAction
-            label="New"
+            label="Items"
             value="new"
             icon={<AddCircleIcon />}
             component={NavLink}
-            to="/create"
+            to="/items"
             exact
           />
           <BottomNavigationAction

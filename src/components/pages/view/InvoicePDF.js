@@ -13,7 +13,7 @@ Font.register({
 });
 
 const BillPage = styled.Page`
-  padding: 80px 40px;
+  padding: 10px 20px;
   font-family: 'Noto Sans';
 `;
 
@@ -26,7 +26,7 @@ const BillDetails = styled.View`
 
 const BillColumnLeft = styled.View`
   width: 50%;
-  padding-right: 50px;
+  padding-right: 40px;
   padding-left: 0px;
 
   text-align: left;
@@ -38,7 +38,7 @@ const BillColumnRight = styled(BillColumnLeft)`
 `;
 
 const InvoiceHeading = styled.Text`
-  font-size: 30px;
+  font-size: 14px;
   font-weight: bolder;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -47,19 +47,24 @@ const InvoiceHeading = styled.Text`
 `;
 const InvoiceNumber = styled.Text`
   color: #444;
-  font-size: 12px;
+  font-size: 8px;
   text-transform: uppercase;
   font-weight: bolder;
 `;
 
 const Details = styled.Text`
-  font-size: 12;
-  padding: 5px 0;
-  line-height: 1.2;
+  font-size: 10;
+  padding: 2px 0;
+  line-height: 1;
+`;
+const SmallDetails = styled.Text`
+  font-size: 8;
+  padding: 2px 0;
+  line-height: 0.8;
 `;
 
 const Textt = styled.Text`
-  padding: 5px 0;
+  padding: 2px 0;
 `;
 
 const BillTable = styled.View`
@@ -69,23 +74,23 @@ const BillTable = styled.View`
 const BillRow = styled.View`
   margin: 0 auto;
   flex-direction: row;
-  padding: 8px 0;
+  padding: 2px 0;
 `;
 const BillRowHead = styled(BillRow)`
-  font-size: 15px;
+  font-size: 12px;
   border: 1px solid #4a4a4a;
   color: black;
 `;
 const BillDataText = styled.Text`
   width: 60%;
   padding: 0 5px;
-  font-size: 12px;
+  font-size: 10px;
 `;
 const BillDataNum = styled.Text`
   width: 15%;
   text-align: right;
   padding: 0 5px;
-  font-size: 12px;
+  font-size: 10px;
 `;
 const BillDataSerial = styled(BillDataNum)`
   width: 5%;
@@ -136,26 +141,20 @@ function InvoicePDF(props) {
         <BillDetails>
           <BillColumnLeft>
             <Textt>{companyName}</Textt>
-            <Details>{companyAddress}</Details>
+            <SmallDetails>{companyAddress}</SmallDetails>
             <InvoiceNumber>{gstNumber && `GSTIN: ${gstNumber}`}</InvoiceNumber>
-            <Details style={{ marginTop: '40px' }}>
-              Invoice Date : {invoiceDate}
-            </Details>
             <Details>
               Due Date : {moment(dueDate.toDate()).format('DD-MM-YYYY')}
             </Details>
-
-
-            <Textt></Textt>
           </BillColumnLeft>
           <BillColumnRight>
             <InvoiceHeading>INVOICE</InvoiceHeading>
-            <InvoiceNumber># Inv/{invoiceNumber}</InvoiceNumber>
-            <Details style={{ marginTop: '20px' }}>Bill To</Details>
-            <Textt>{customerName}</Textt>
+            <InvoiceNumber># Inv/{invoiceNumber} Date: {invoiceDate}</InvoiceNumber>
+            <Details style={{ marginTop: '2px' }}>Bill To</Details>
+            <Details>{customerName}</Details>
             <Details>{customerAddress}</Details>
             <Details>{mobileNumber}</Details>
-            <Details>{email}</Details>
+            {email && <Details>{email}</Details>}
           </BillColumnRight>
         </BillDetails>
         <BillTable>
@@ -172,10 +171,11 @@ function InvoicePDF(props) {
         {itemList}
         <BillDetails style={{ padding: '0 5px' }}>
           <BillColumnLeft>
-            <Details style={{ marginTop: '40px', textTransform: 'capitalize' }}>Total Amount in words: {numWords(totalAmount)}</Details>
+            <Details style={{ marginTop: '10px', textTransform: 'capitalize' }}>Total Amount in words: {numWords(totalAmount)}</Details>
+            <Details style={{ textTransform: 'capitalize' }}>Paid Amount in words: {numWords(amountPaid)}</Details>
 
             {note.length > 0 && (
-              <Details style={{ marginTop: '20px' }}>Note : {note}</Details>
+              <Details style={{ marginTop: '30px' }}>Note : {note}</Details>
             )}
             <Details>सभी विवाद केवल पटना के अधिकार क्षेत्र के अधीन हैं है  </Details>
           </BillColumnLeft>
@@ -251,9 +251,15 @@ function InvoicePDF(props) {
                   </Details>
 
                 )}
-                <Details>{currencySign}{' '}{amountPaid}</Details>
-                <Details>{currencySign}{' '}{amountDue}</Details>
-                <Details style={{ marginTop: '50px' }}>Signature</Details>
+                <Details>{currencySign}{' '}{amountPaid.toLocaleString('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                })}</Details>
+                <Details>{currencySign}{' '}{amountDue.toLocaleString('en-US', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2
+                })}</Details>
+                <Details style={{ marginTop: '30px' }}>Signature</Details>
 
 
               </BillTotal>

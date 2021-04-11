@@ -32,7 +32,7 @@ function LoginForm() {
     <LoginBox>
       <FormHeader>
         <div className="brand-image">
-          <img src={BillyLogo} alt="BillyLogo" />
+          <img src={BillyLogo} alt="EasyDuaknLogo" />
         </div>
 
         <div className="greeting">Reset your password</div>
@@ -69,7 +69,7 @@ function LoginForm() {
         </Button>
       </form>
       <p className="footer-text">
-        <Link to="/login"> Login</Link> to billy
+        <Link to="/login"> Login</Link> to EasyDukan
       </p>
       <p className="footer-by ">
         Created By{' '}
@@ -78,7 +78,7 @@ function LoginForm() {
           target="_blank"
           rel="noopener noreferrer"
         >
-         Ujjawal Anand
+          Ujjawal Anand
         </a>
       </p>
     </LoginBox>

@@ -13,7 +13,7 @@ import useToggle from '../../../hooks/useToggle';
 function ProductListItem(props) {
   const { id, itemName, qty, rate } = props.item;
   const [isEditing, setEditing] = useToggle(false);
-  const { register, handleSubmit, errors, clearError } = useForm();
+  const { register, handleSubmit, errors, clearErrors } = useForm();
 
   const currency = props.currency === 'usd' ? '$' : '₹';
 
@@ -42,7 +42,7 @@ function ProductListItem(props) {
       rate: rate,
       qty: qty
     });
-    clearError();
+    clearErrors();
     setEditing();
   };
 

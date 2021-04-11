@@ -1,4 +1,4 @@
-export default {
+const firebaseConfig = {
   apiKey: "AIzaSyDuSjq03V9VXb103zBuYY69qYwx5sJ-xhE",
   authDomain: "biller-7f50c.firebaseapp.com",
   projectId: "biller-7f50c",
@@ -8,3 +8,5 @@ export default {
   measurementId: "G-Y6X7TB3Q85",
   // databaseURL: "https://biller-7f50c-default-rtdb.firebaseio.com/",  
 };
+
+export default firebaseConfig;

@@ -17,7 +17,12 @@ export const createInvoice = (invoiceDetails) => (
     .collection('users')
     .doc(uid)
     .collection('invoices')
-    .add({ ...invoiceDetails })
+    .add({
+      timeline: getFirebase().firestore.FieldValue.arrayUnion({
+        event: "Invoice Created", eventId: "",
+        time: new Date(), info: ""
+      }), ...invoiceDetails
+    })
     .then((res) => {
       path = res.id;
       firestore
@@ -78,7 +83,11 @@ export const updatePaymentStatus = ({ invoiceId, status = 'unpaid', amountPaid =
     .doc(invoiceId)
     .update({
       paidStatus: status, amountPaid,
-      paymentHistory: getFirebase().firestore.FieldValue.arrayUnion(paymentHistory)
+      paymentHistory: getFirebase().firestore.FieldValue.arrayUnion(paymentHistory),
+      timeline: getFirebase().firestore.FieldValue.arrayUnion({
+        event: "Payment Made", time: new Date(), eventId: paymentHistory.id,
+        info: `Amount ${paymentHistory.amount}`
+      }),
     })
     .then(() => {
       dispatch({ type: 'UPDATE_PAYMENT_STATUS' });
@@ -87,7 +96,7 @@ export const updatePaymentStatus = ({ invoiceId, status = 'unpaid', amountPaid =
 };
 
 /* ************* Add Gatepass to invoice *************** */
-export const addGatepass = (invoiceId, data) => (
+export const addGatepass = (invoiceId, data, orders) => (
   dispatch,
   getState,
   { getFirebase }
@@ -101,7 +110,12 @@ export const addGatepass = (invoiceId, data) => (
     .collection('invoices')
     .doc(invoiceId)
     .update({
-      gatepasses: getFirebase().firestore.FieldValue.arrayUnion(data)
+      gatepasses: getFirebase().firestore.FieldValue.arrayUnion(data),
+      orders,
+      timeline: getFirebase().firestore.FieldValue.arrayUnion({
+        event: "Gatepass Created", time: new Date(), eventId: data.id,
+        info: `Warehouse  -${data.warehouseName}\n Items: ${data.items.length} `
+      }),
     })
     .then(() => {
       dispatch({ type: 'UPDATE_PAYMENT_STATUS' });

@@ -55,7 +55,7 @@ function AppLoader() {
   return (
     <Loader>
       <div>
-        <img src={BillyLogo} alt="Billy Logo" />
+        <img src={BillyLogo} alt="EasyDukan Logo" />
         <p></p>
       </div>
     </Loader>

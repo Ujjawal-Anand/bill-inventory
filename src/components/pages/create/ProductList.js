@@ -17,17 +17,19 @@ function ProductList(props) {
 
   // ADD, DELETE, EDIT
   const handleAdd = (newItem) => {
-    const newItems = [
-      ...items,
-      {
-        ...newItem,
-        rate: parseFloat(newItem.rate),
-        amount: parseFloat(newItem.amount),
-        qty: parseFloat(newItem.qty)
-      }
-    ];
-    setItems(newItems);
-    toggleAddItemForm();
+    if (newItem) {
+      const newItems = [
+        ...items,
+        {
+          ...newItem,
+          rate: parseFloat(newItem.rate),
+          amount: parseFloat(newItem.amount),
+          qty: parseFloat(newItem.qty)
+        }
+      ];
+      setItems(newItems);
+      toggleAddItemForm();
+    }
   };
 
   const handleDelete = (id) => {
@@ -71,7 +73,7 @@ function ProductList(props) {
       {showAddItemForm && (
         <ProductAddItem
           currency={props.invoiceMeta.currency}
-          handleAdd={handleAdd}
+          handleadd={handleAdd}
         ></ProductAddItem>
       )}
       <Button onClick={toggleAddItemForm} className="addBtn">

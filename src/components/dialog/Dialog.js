@@ -14,7 +14,7 @@ import { closeDialog } from '../../redux/actions/alertDialogActions';
 
 // Component
 function AlertDialog() {
-  const { alert=false, alertTitle, alertText, yesBtn, noBtn, alertFn } = useSelector(
+  const { alert = false, alertTitle, alertText, yesBtn, noBtn, alertFn } = useSelector(
     (state) => state.alertState
   );
 
@@ -34,6 +34,7 @@ function AlertDialog() {
       <Dialog
         open={alert}
         onClose={handleClose}
+        disableBackdropClick
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >

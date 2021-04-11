@@ -45,7 +45,8 @@ export default function AddItemDialog({ companyName }) {
     return (
         <div>
 
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <Dialog open={open} disableBackdropClick
+                onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Add Item</DialogTitle>
                 <DialogContent>
 
@@ -68,7 +69,13 @@ export default function AddItemDialog({ companyName }) {
                     <TextField
                         label="Selling Price"
                         name="sellingPrice"
-                        inputRef={register({ required: true, minLength: 2 })}
+                        inputRef={register({
+                            required: true, minLength: 1, maxLength: 5,
+                            pattern: {
+                                value: /^\d+$/,
+                                message: "Must be a number"
+                            }
+                        })}
                         error={errors.sellingPrice && true}
                         helperText={errors.sellingPrice && 'Invalid Input'}
                         size="small"

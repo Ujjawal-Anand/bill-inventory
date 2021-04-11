@@ -34,7 +34,7 @@ function Welcome() {
     <Loader>
       <div>
         <Link to="/create">
-          <img src={welcomeImg} alt="Welcome to Billy" />
+          <img src={welcomeImg} alt="Welcome to EasyDukan" />
         </Link>
       </div>
     </Loader>

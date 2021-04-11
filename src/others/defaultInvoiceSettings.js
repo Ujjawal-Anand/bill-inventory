@@ -1,4 +1,4 @@
-export default {
+const defaultSettings = {
   companyName: '',
   gstNumber: '',
   taxPercent: 18,
@@ -10,3 +10,5 @@ export default {
   currency: 'inr',
   currentInvoiceNum: '0001'
 };
+
+export default defaultSettings

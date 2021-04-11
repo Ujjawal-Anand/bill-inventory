@@ -31,7 +31,7 @@ function LoginForm() {
     <LoginBox>
       <FormHeader>
         <div className="brand-image">
-          <img src={BillyLogo} alt="BillyLogo" />
+          <img src={BillyLogo} alt="EasyDukanLogo" />
         </div>
 
         <div className="greeting-lg">Welcome Back!</div>

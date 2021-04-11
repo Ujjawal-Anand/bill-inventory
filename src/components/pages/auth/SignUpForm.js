@@ -33,7 +33,7 @@ function SignUpForm() {
       <FormHeader>
         <Hidden lgUp>
           <div className="brand-image">
-            <img src={BillyLogo} alt="BillyLogo" />
+            <img src={BillyLogo} alt="EasyDukanLogo" />
           </div>
         </Hidden>
 

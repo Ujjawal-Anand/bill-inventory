@@ -6,17 +6,20 @@ import Grid from '@material-ui/core/Grid';
 import { useForm } from 'react-hook-form';
 // Custom
 import { Button } from '../../styledComponents/shared/Button';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Typography from '@material-ui/core/Typography';
+import { editItem } from '../../../redux/actions/itemActions';
 
 
 
 //Component
 function ProductAddItem(props) {
+  const dispatch = useDispatch();
   const { register, handleSubmit, errors } = useForm();
   const [form, setForm] = useState({ itemName: '', rate: '', qty: 1 });
-  const items = useSelector((state) => state.item.items)
+  const items = useSelector((state) => state.firestore.ordered.items);
+  const [rate, setRate] = useState(0);
 
   const updateFrom = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -27,8 +30,15 @@ function ProductAddItem(props) {
 
   const onSubmit = (data) => {
     console.log(data)
-    // here update the rate
-    props.handleAdd({ ...form, ...data });
+    console.log(form)
+    // update rate
+    if (data.rate && rate !== 0 &&
+      parseFloat(data.rate) !== 0 &&
+      parseFloat(rate) !== parseFloat(data.rate)) {
+      // change rate
+      dispatch(editItem(form.id, { sellingPrice: data.rate }))
+    }
+    props.handleadd({ ...form, orderedQty: 0, ...data });
   };
 
   return (
@@ -42,7 +52,11 @@ function ProductAddItem(props) {
           options={items}
           getOptionLabel={(option) => option.itemName}
           renderInput={(params) => (
-            <TextField {...params} name="itemName" variant="outlined"
+            <TextField {...params} name="name" variant="outlined"
+              inputRef={register({ required: true, min: 0 })}
+              error={errors.name && true}
+              helperText={errors.name && 'Item Name is required'}
+
               margin="dense" label="Item Name" />
           )}
           renderOption={(option) => {
@@ -59,26 +73,16 @@ function ProductAddItem(props) {
               </Grid>
             );
           }}
-          onChange={(event, value) => setForm({
-            ...form,
-            itemName: value.displayName ? value.displayName : value.itemName,
-            rate: value.sellingPrice,
-            id: value.id
-          })}
+          onChange={(event, value) => {
+            value && setRate(value.sellingPrice);
+            value && setForm({
+              ...form,
+              itemName: value.displayName ? value.displayName : value.itemName,
+              rate: value.sellingPrice,
+              id: value.id
+            })
+          }}
         />
-        {/* <TextField
-          size="small"
-          fullWidth
-          label="Item Name"
-          name="itemName"
-          variant="outlined"
-          margin="dense"
-          onChange={updateFrom}
-          value={form.inputName}
-          inputRef={register({ required: true, minLength: 2 })}
-          error={errors.itemName && true}
-          helperText={errors.itemName && 'Invalid Input'}
-        /> */}
       </Grid>
       <Grid item xs={8} md={2} lg={2}>
         <TextField
@@ -103,37 +107,15 @@ function ProductAddItem(props) {
           }}
         />
       </Grid>
-      {/* <Grid item xs={4} md={1} lg={1}>
-        <TextField
-          size="small"
-          type="number"
-          variant="outlined"
-          margin="dense"
-          label="Disc"
-          name="disc"
-          value={form.disc}
-          onChange={updateFrom}
-          inputRef={register({ required: true, min: 0, max: 100 })}
-          fullWidth
-          error={errors.disc && true}
-          helperText={errors.disc && 'Invalid'}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="start">
-                <b>%</b>
-              </InputAdornment>
-            )
-          }}
-        />
-      </Grid> */}
-      <Grid item xs={4} md={1} lg={1}>
+
+      <Grid item xs={4} md={2} lg={2}>
         <TextField
           size="small"
           type="number"
           label="Qty"
           name="qty"
-          onChange={updateFrom}
           value={form.qty}
+          onChange={updateFrom}
           inputRef={register({ required: true, min: 0, max: 999 })}
           variant="outlined"
           margin="dense"

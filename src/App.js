@@ -49,7 +49,7 @@ function App() {
       collection: 'users',
       doc: auth.uid || ' ',
       subcollections: [
-        { collection: 'warehouse', orderBy: ['createdAt', 'desc'] }
+        { collection: 'warehouse', orderBy: ['createdAt', 'asc'] }
       ],
       storeAs: 'warehouse'
     }

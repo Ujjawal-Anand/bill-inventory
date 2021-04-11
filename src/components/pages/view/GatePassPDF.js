@@ -36,7 +36,7 @@ const BillColumnRight = styled(BillColumnLeft)`
 `;
 
 const GatePassHeading = styled.Text`
-  font-size: 30px;
+  font-size: 16px;
   font-weight: bolder;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -45,13 +45,13 @@ const GatePassHeading = styled.Text`
 `;
 
 const Details = styled.Text`
-  font-size: 12;
-  padding: 5px 0;
-  line-height: 1.2;
+  font-size: 10;
+  padding: 2px 0;
+  line-height: 1;
 `;
 
 const Textt = styled.Text`
-  padding: 5px 0;
+  padding: 2px 0;
 `;
 
 const BillTable = styled.View`
@@ -61,17 +61,17 @@ const BillTable = styled.View`
 const BillRow = styled.View`
   margin: 0 auto;
   flex-direction: row;
-  padding: 8px 0;
+  padding: 4px 0;
 `;
 const BillRowHead = styled(BillRow)`
-  font-size: 15px;
+  font-size: 13px;
   border: 1px solid #4a4a4a;
   color: black;
 `;
 const BillDataText = styled.Text`
   width: 80%;
   padding: 0 5px;
-  font-size: 12px;
+  font-size: 10px;
 `;
 const BillDataNum = styled.Text`
   width: 15%;
@@ -112,13 +112,11 @@ function GatePassPDF(props) {
           <BillColumnLeft>
             <Textt>{companyName}</Textt>
             <Details>{companyAddress}</Details>
-            <Details>
-              GatePass Date : {new Date().toLocaleDateString()}
-            </Details>
             <Details>Delivery Date : {new Date(deliveryDate).toLocaleDateString()} </Details>
           </BillColumnLeft>
           <BillColumnRight>
             <GatePassHeading>GatePass</GatePassHeading>
+            <Details>{new Date().toLocaleDateString()}</Details>
             <Details>Warehouse - {warehouseName}</Details>
             <Details>Address - {warehouseAddress}</Details>
           </BillColumnRight>

@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import history from '../../others/history';
 import { db } from '../../models/db';
 
@@ -45,7 +46,6 @@ export const loadItems = () => {
                     type: 'LOAD_ITEMS',
                     payload: items,
                 });
-                console.log("items", items)
             });
     };
 }
@@ -92,6 +92,7 @@ export const editItem = (itemId, newItemDetails) => (
 
     const firestore = getFirebase().firestore();
 
+
     firestore
         .collection('users')
         .doc(uid)
@@ -100,11 +101,35 @@ export const editItem = (itemId, newItemDetails) => (
         .update({ ...newItemDetails })
         .then(() => {
             // index.partialUpdateObject({ objectID: itemId, ...newItemDetails })
-            dispatch({ type: 'CREATE_ITEM', payload: newItemDetails });
+            dispatch({ type: 'EDIT_ITEM', payload: { itemId, newItemDetails } });
 
         })
         .catch((err) => dispatch({ type: 'WENTWRONG_BAR' }));
-    if (history.location.pathname !== '/') {
-        history.push('/items');
-    }
+    // if (history.location.pathname !== '/') {
+    //     history.push('/items');
+    // }
+};
+
+/******************Update stock of multiple item in one go **********/
+export const updateStockInBatch = (data) => (
+    dispatch, getState, { getFirebase }
+) => {
+
+    const uid = getState().firebase.auth.uid;
+
+    const firestore = getFirebase().firestore();
+
+    const batch = firestore.batch();
+
+    const itemRef = firestore.collection('users').doc(uid).collection('items')
+    data.map(item => {
+        const ref = itemRef.doc(item.id);
+        batch.update(ref, { stock: { ...item.details } })
+    })
+
+    batch.commit().then(() => {
+        data.map(item => {
+            dispatch({ type: 'UPDATE_ITEM_STOCK', payload: { itemId: item.id, stock: item.details } });
+        })
+    }).catch((err) => dispatch({ type: 'WENTWRONG_BAR' }));
 };

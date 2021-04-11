@@ -39,7 +39,7 @@ export default function AddWarehouseDialog() {
     return (
         <div>
 
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <Dialog open={open} disableBackdropClick onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Add Warehouse</DialogTitle>
                 <DialogContent>
 
@@ -75,7 +75,13 @@ export default function AddWarehouseDialog() {
                         label="Mobile"
                         name="mobile"
                         error={errors.mobile && true}
-                        inputRef={register({ required: false, minLength: 10 })}
+                        inputRef={register({
+                            required: false, minLength: 10,
+                            pattern: {
+                                value: /^\d+$/,
+                                message: "Must be a number"
+                            }
+                        })}
                         helperText={errors.mobile && 'Invalid Mobile Number'}
                         size="small"
                         fullWidth

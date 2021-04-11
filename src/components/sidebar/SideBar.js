@@ -11,7 +11,7 @@ function SideBar() {
   return (
     <SidePanel>
       <Link to="/">
-        <img src={BillyLogo} alt="Billy Logo" />
+        <img src={BillyLogo} alt="EasyDukan Logo" />
       </Link>
       <NavLinks
         icon={'tio-dashboard_vs'}

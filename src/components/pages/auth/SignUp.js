@@ -15,7 +15,7 @@ function SignUp() {
     return () => {
       dispatch({ type: 'RESET_AUTH_ERROR' });
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <SignUpPage>
@@ -29,7 +29,7 @@ function SignUp() {
             </h1>
             <div className="branding">
               <div className="brand-image">
-                <img src={BillyLogo} alt="BillyLogo" />
+                <img src={BillyLogo} alt="EasyDukanLogo" />
               </div>
               <p>created by</p>
               <div className="brand-image">

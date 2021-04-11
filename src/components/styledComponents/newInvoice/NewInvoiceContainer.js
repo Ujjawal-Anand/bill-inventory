@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const InvoiceContainer = styled.div`
   max-width: 1140px;
-  padding: 2rem;
+  padding: 0 2rem;
   margin: 0 auto;
 
   h3 {

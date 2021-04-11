@@ -15,7 +15,7 @@ import rootReducer from './reducers/rootReducers';
 
 // Firebase Init
 firebase.initializeApp(firebaseConfig);
-firebase.firestore();
+firebase.firestore().enablePersistence({ synchronizeTabs: true });
 firebase.functions();
 firebase.analytics();
 

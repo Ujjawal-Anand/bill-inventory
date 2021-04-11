@@ -3,6 +3,8 @@ import React from 'react';
 import Header from '../../header/Header';
 import { useSelector, useDispatch } from 'react-redux';
 import { isLoaded, isEmpty } from 'react-redux-firebase';
+import Divider from '@material-ui/core/Divider'
+
 // Custom
 import {
   ItemTable,
@@ -50,7 +52,10 @@ function Items() {
 
   if (isLoaded(items) && isLoaded(settings) && isLoaded(warehouse)) {
     tableListItems = items.map((item, index) => (
-      <ItemList item={item} key={item.id} index={index} />
+      <>
+        <ItemList item={item} key={item.id} index={index} />
+        <Divider />
+      </>
     ));
   }
   if (!isLoaded(items) || !isLoaded(settings) || !isLoaded(warehouse)) {
@@ -70,6 +75,7 @@ function Items() {
           <ItemListHead>
             <p className="listHead number">Sr.No.</p>
             <p className="listHead name">Name</p>
+            <p className="listHead displayName">Stock</p>
             <p className="listHead rate">Rate</p>
             <p className="listHead option"></p>
           </ItemListHead>

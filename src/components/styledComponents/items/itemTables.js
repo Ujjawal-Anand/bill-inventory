@@ -61,7 +61,7 @@ const ItemList = styled.div`
     font-size: 0.9rem;
     grid-template-areas:
       'name name name rate option'
-      'displayName displayName displayName option';
+      
     grid-template-columns: repeat(3, 1fr) 1.5fr 0.3fr;
     gap: 0.5rem;
   }

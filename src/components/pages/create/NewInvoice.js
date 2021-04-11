@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 //Vendor
 import TextField from '@material-ui/core/TextField';
-import { RadioInput } from '../../styledComponents/shared/RadioButton';
 import Grid from '@material-ui/core/Grid';
 import MomentUtils from '@date-io/moment';
 import moment from 'moment';
@@ -38,7 +37,7 @@ function NewInvoice(props) {
       : invoiceNum;
 
   const [invoiceMeta, setInvoiceMeta] = useState({
-    invoiceDate: moment(new Date()).format('DD-MM-YYYY'),
+    invoiceDate: new Date(),
     dueDate: new Date(),
     billableType: 'product',
     mobileNumber: '',
@@ -72,14 +71,11 @@ function NewInvoice(props) {
   if (!isLoaded(settings)) return <CreatePageLoader />;
 
   // Controlling Some Inputs
-  const handleInvoiceMeta = (e) => {
-    setInvoiceMeta({ ...invoiceMeta, [e.target.name]: e.target.value });
-  };
   const handleDueDateChange = (e) => {
     setInvoiceMeta({ ...invoiceMeta, dueDate: e._d });
   };
   const handleInvoiceDateChange = (e) => {
-    setInvoiceMeta({ ...invoiceMeta, invoiceDate: moment(e._d).format('DD-MM-YYYY') });
+    setInvoiceMeta({ ...invoiceMeta, invoiceDate: e._d });
   };
 
   // Submiting Invoice Details
@@ -93,7 +89,7 @@ function NewInvoice(props) {
         companyName: settings.companyName,
         gstNumber: settings.gstNumber,
         dueDate: invoiceMeta.dueDate,
-        invoiceDate: invoiceMeta.invoiceDate,
+        invoiceDate: moment(invoiceMeta.invoiceDate).format('DD-MM-YYYY'),
         paidStatus: 'unpaid',
         remindedAt: new Date()
       };
@@ -109,59 +105,58 @@ function NewInvoice(props) {
     <div>
       <Header title={'Add New Invoice'} />
       <InvoiceContainer>
-        <h3>INVOICE</h3>
+
         <Grid
           container
           justify="center"
           alignItems="center"
           className="invoice-details"
-          spacing={4}
-        >
-          <Grid item xs={12} sm={6} md={6} lg={4}>
-            <div className="textfield-container">
-              <p className="invoice-title">Customer Details</p>
 
-              <TextField
-                label="Customer Name"
-                name="customerName"
-                inputRef={register({ required: true, minLength: 2 })}
-                error={errors.customerName && true}
-                helperText={errors.customerName && 'Invalid Input'}
-                size="small"
-                fullWidth
-                required
-                variant="outlined"
-                margin="dense"
-              />
-              <TextField
-                label="Address"
-                name="customerAddress"
-                inputRef={register({ required: false, minLength: 2 })}
-                error={errors.customerAddress && true}
-                helperText={errors.customerAddress && 'Invalid Input'}
-                size="small"
-                fullWidth
-                variant="outlined"
-                margin="dense"
-              />
-              <TextField
-                label="Mobile Number"
-                name="mobileNumber"
-                inputRef={register({
-                  required: false,
-                  minLength: 10,
-                  pattern: /^[6-9]\d{9}/
-                })}
-                error={errors.email && true}
-                helperText={errors.mobileNumber && 'Invalid Input'}
-                size="small"
-                type="email"
-                fullWidth
-                variant="outlined"
-                margin="dense"
-              />
-            </div>
-          </Grid>
+        >
+
+          <div className="textfield-container">
+            <p className="invoice-title">Customer Details</p>
+
+            <TextField
+              label="Customer Name"
+              name="customerName"
+              inputRef={register({ required: true, minLength: 2 })}
+              error={errors.customerName && true}
+              helperText={errors.customerName && 'Invalid Input'}
+              size="small"
+              fullWidth
+              required
+              variant="outlined"
+              margin="dense"
+            />
+            <TextField
+              label="Address"
+              name="customerAddress"
+              inputRef={register({ required: false, minLength: 2 })}
+              error={errors.customerAddress && true}
+              helperText={errors.customerAddress && 'Invalid Input'}
+              size="small"
+              fullWidth
+              variant="outlined"
+              margin="dense"
+            />
+            <TextField
+              label="Mobile Number"
+              name="mobileNumber"
+              inputRef={register({
+                required: false,
+                minLength: 10,
+                pattern: /^[6-9]\d{9}/
+              })}
+              error={errors.email && true}
+              helperText={errors.mobileNumber && 'Invalid Input'}
+              size="small"
+              type="email"
+              fullWidth
+              variant="outlined"
+              margin="dense"
+            />
+          </div>
           <Grid item xs={12} sm={6} md={6} lg={4}>
             <div className="textfield-container">
               <p className="invoice-title">Invoice Details</p>
@@ -225,109 +220,6 @@ function NewInvoice(props) {
           invoiceMeta={invoiceMeta}
           handleInvoiceSubmit={handleInvoiceSubmit}
         />
-        <Grid item xs={12} md={12} lg={12}>
-          <Grid
-            container
-            justify="center"
-            alignItems="center"
-            className="invoice-details"
-          >
-            <Grid item xs={12} md={12} lg={4}>
-              <div className="textfield-container">
-                <p className="invoice-title">Enable Tax?</p>
-                <div id="group1" className="radio-group">
-                  <RadioInput>
-                    <input
-                      type="radio"
-                      value={true}
-                      id="taxTrue"
-                      name="taxEnable"
-                      ref={register({
-                        required: true
-                      })}
-                      checked={invoiceMeta.taxEnable === 'true'}
-                      onChange={handleInvoiceMeta}
-                    />
-                    <label htmlFor="taxTrue">Yes</label>
-                  </RadioInput>
-                  <RadioInput>
-                    <input
-                      type="radio"
-                      value={false}
-                      id="taxFalse"
-                      name="taxEnable"
-                      ref={register({
-                        required: true
-                      })}
-                      checked={invoiceMeta.taxEnable === 'false'}
-                      onChange={handleInvoiceMeta}
-                    />
-                    <label htmlFor="taxFalse">No</label>
-                  </RadioInput>
-                </div>
-              </div>
-            </Grid>
-            {invoiceMeta.taxEnable === 'true' && (
-              <>
-                <Grid item xs={12} md={12} lg={4}>
-                  <div className="textfield-container">
-                    <p className="invoice-title">Tax Type</p>
-                    <div id="group2" className="radio-group">
-                      <RadioInput>
-                        <input
-                          type="radio"
-                          value="exc"
-                          id="taxTypeExc"
-                          name="taxType"
-                          ref={register({
-                            required: true
-                          })}
-                          checked={invoiceMeta.taxType === 'exc'}
-                          onChange={handleInvoiceMeta}
-                        />
-                        <label htmlFor="taxTypeExc">Exclusive</label>
-                      </RadioInput>
-                      <RadioInput>
-                        <input
-                          type="radio"
-                          value="inc"
-                          id="taxTypeInc"
-                          name="taxType"
-                          ref={register({
-                            required: true
-                          })}
-                          checked={invoiceMeta.taxType === 'inc'}
-                          onChange={handleInvoiceMeta}
-                        />
-                        <label htmlFor="taxTypeInc">Inclusive</label>
-                      </RadioInput>
-                    </div>
-                  </div>
-                </Grid>
-                <Grid item xs={12} md={12} lg={4}>
-                  <div className="textfield-container">
-                    <p className="invoice-title">Tax Percent</p>
-
-                    <TextField
-                      label="Tax %"
-                      name="taxPercent"
-                      inputRef={register({ required: true, min: 0, max: 50 })}
-                      error={errors.taxPercent && true}
-                      helperText={errors.taxPercent && 'Invalid Input'}
-                      size="small"
-                      type="number"
-                      fullWidth
-                      variant="outlined"
-                      margin="dense"
-                      onChange={handleInvoiceMeta}
-                      value={invoiceMeta.taxPercent}
-                    />
-                  </div>
-                </Grid>
-              </>
-            )}
-          </Grid>
-        </Grid>
       </InvoiceContainer>
     </div>
   );

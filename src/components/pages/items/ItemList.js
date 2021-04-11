@@ -23,6 +23,11 @@ function ItemList(props) {
     const [anchorEl, setAnchorEl] = useState(null);
     const dispatch = useDispatch();
     const open = Boolean(anchorEl);
+    let stock = '';
+
+    for (let [key, value] of Object.entries(item.stock)) {
+        stock += `${key} : ${value}, `
+    }
 
     const currencySign = item.currency === 'usd' ? '$' : '₹';
 
@@ -65,7 +70,7 @@ function ItemList(props) {
             <p className="number">{index + 1}</p>
 
             <p className="name">{item.itemName}<br />{item.displayName ? item.displayName : ''}</p>
-            {/* <p className="displayName">{item.displayName ? item.displayName : item.itemName}</p> */}
+            <p className="displayName">{stock}</p>
 
 
             <p className="rate">

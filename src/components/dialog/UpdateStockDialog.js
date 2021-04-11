@@ -12,6 +12,7 @@ import { editItem } from '../../redux/actions/itemActions';
 
 
 export default function UpdateStockDialog({ warehouse }) {
+    const NOT_LISTED = "NotListed";
     const { openUpdateStock, item } = useSelector(
         (state) => state.alertState
     );
@@ -27,14 +28,22 @@ export default function UpdateStockDialog({ warehouse }) {
     };
 
     const onSubmit = (data) => {
-        dispatch(editItem(item.id, { stock: data }));
+        let dataToSubmit = {};
+        //filter key's which has value of "Not Listed"
+        for (let [key, value] of Object.entries(data)) {
+            if (value !== NOT_LISTED) {
+                dataToSubmit[key] = parseFloat(value);
+            }
+        }
+        console.log("data To Submit", dataToSubmit);
+        dispatch(editItem(item.id, { stock: dataToSubmit }));
         handleClose()
     };
 
     return item ? (
         <div>
 
-            <Dialog open={openUpdateStock} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <Dialog open={openUpdateStock} onClose={handleClose} disableBackdropClick aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Update Stock</DialogTitle>
                 <DialogContent>
                     {warehouse.map((warehpouseItem, index) => (
@@ -42,12 +51,18 @@ export default function UpdateStockDialog({ warehouse }) {
                             key={index}
                             label={warehpouseItem.name}
                             name={warehpouseItem.name}
-                            inputRef={register({ required: false, minLength: 1 })}
-                            error={errors.itemName && true}
+                            inputRef={register({
+                                required: true,
+                                pattern: {
+                                    value: /^(\d+|NotListed)$/,
+                                    message: "Must be a number"
+                                }
+                            })}
+                            error={errors[warehpouseItem.name] && true}
                             helperText={errors.itemName && 'Invalid Input'}
                             size="small"
                             fullWidth
-                            defaultValue={item.stock && item.stock[warehpouseItem.name]}
+                            defaultValue={item.stock && item.stock[warehpouseItem.name] ? item.stock[warehpouseItem.name] : NOT_LISTED}
                             variant="outlined"
                             margin="dense"
                             required

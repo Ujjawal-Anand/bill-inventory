@@ -62,7 +62,7 @@ export default function PaymentChangeDialog({ totalAmount, invoiceId, lastPaid =
 
     return (
         <div>
-            <Dialog open={open} onClose={handleClose} maxWidth="lg" aria-labelledby="form-dialog-title">
+            <Dialog open={open} disableBackdropClick onClose={handleClose} maxWidth="lg" aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Change Payment Status</DialogTitle>
                 <DialogContent>
 
@@ -76,7 +76,13 @@ export default function PaymentChangeDialog({ totalAmount, invoiceId, lastPaid =
                             autoFocus
                             label="Amount Paid"
                             name="amount"
-                            inputRef={register({ required: true, minLength: 1 })}
+                            inputRef={register({
+                                required: true, minLength: 1, maxLength: 7,
+                                pattern: {
+                                    value: /^\d+$/,
+                                    message: "Must be a number"
+                                }
+                            })}
                             error={errors.amount && true}
                             helperText={errors.name && 'Invalid Input'}
                             size="small"
